@@ -1,154 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Netflix Clone</title>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Netflix</title>
+    <script src="https://kit.fontawesome.com/bc3a1796c2.js" crossorigin="anonymous"></script>
+    <link rel="shortcut icon" href="https://image.flaticon.com/icons/png/512/870/870910.ico"/>
     <style>
-        /* General Styling */
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #141414;
-            color: white;
-        }
-        a {
-            text-decoration: none;
-            color: white;
-        }
-        /* Header */
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px 40px;
-            background-color: #141414;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-        .header .logo {
-            color: #e50914;
-            font-size: 24px;
-            font-weight: bold;
-        }
-        .header .nav a {
-            margin: 0 15px;
-            font-size: 16px;
-        }
-        .header .nav a:hover {
-            text-decoration: underline;
-        }
-        /* Hero Section */
-        .hero {
-            margin-top: 80px;
-            height: 500px;
-            background: url('https://www.whats-on-netflix.com/wp-content/uploads/2019/08/netflix-background-image-1.jpg') no-repeat center center / cover;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            text-align: center;
-            color: white;
-        }
-        .hero h1 {
-            font-size: 50px;
-            margin-bottom: 20px;
-        }
-        .hero button {
-            background-color: #e50914;
-            color: white;
-            padding: 10px 20px;
-            font-size: 18px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .hero button:hover {
-            background-color: #b20710;
-        }
-        /* Section Styling */
-        .section {
-            padding: 40px;
-        }
-        .section h2 {
-            margin-bottom: 20px;
-            font-size: 28px;
-        }
-        .video-row {
-            display: flex;
-            overflow-x: auto;
-            gap: 20px;
-        }
-        .video-card {
-            flex: 0 0 300px;
-            background-color: #333;
-            border-radius: 5px;
-            overflow: hidden;
-            cursor: pointer;
-            position: relative;
-        }
-        .video-card img {
-            width: 100%;
-            display: block;
-        }
-        .video-card h3 {
-            padding: 10px;
-            font-size: 18px;
-            background-color: rgba(0, 0, 0, 0.8);
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            text-align: center;
-        }
-        /* Footer */
-        .footer {
-            padding: 20px;
-            text-align: center;
-            background-color: #141414;
-            color: #aaa;
-        }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Roboto", sans-serif;
+        background-color: rgba(8, 8, 8, 0.89);
+        color: white;
+      }
+
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        background-color: transparent;
+      }
+
+      .logo img {
+        width: 180px;
+      }
+
+      .main {
+        width: 100%;
+        margin-top: -50px;
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 710px;
+        background-position: center;
+        background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
+          url(https://assets.nflxext.com/ffe/siteui/vlv3/a1dc92ca-091d-4ca9-a05b-8cd44bbfce6a/f9368347-e982-4856-a5a4-396796381f28/RS-en-20191230-popsignuptwoweeks-perspective_alpha_website_large.jpg);
+      }
+
+      .area {
+        text-align: center;
+        margin-top: 70px;
+      }
+
+      .area h1 {
+        font-size: 60px;
+        word-spacing: 15px;
+        line-height: 75px;
+      }
+
+      .area h3 {
+        font-size: 27px;
+        font-weight: normal;
+        margin-top: -30px;
+      }
+
+      .movies-list {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 30px;
+      }
+
+      .movie-item {
+        font-size: 24px;
+        cursor: pointer;
+        margin: 10px;
+        padding: 10px;
+        background-color: #e50914;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+      }
+
+      .movie-item:hover {
+        background-color: #f40612;
+      }
+
+      .movie-details {
+        display: none;
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #333;
+        border-radius: 5px;
+      }
+
+      .movie-title {
+        font-size: 36px;
+        font-weight: bold;
+      }
+
+      .movie-description {
+        margin-top: 10px;
+        font-size: 18px;
+      }
+
+      iframe {
+        width: 100%;
+        height: 600px;
+        border: none;
+      }
     </style>
-</head>
-<body>
-    <!-- Header -->
-    <div class="header">
-        <div class="logo">Netflix Clone</div>
-        <div class="nav">
-            <a href="#">Home</a>
-            <a href="#">TV Shows</a>
-            <a href="#">Movies</a>
-            <a href="#">My List</a>
+  </head>
+  <body>
+
+    <div class="navbar">
+      <div class="logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix Logo">
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="area">
+        <h1>Welcome to Netflix</h1>
+        <h3>Select a Movie</h3>
+        <div class="movies-list">
+          <div class="movie-item" onclick="showMovieDetails('Movie 1', 'Garfield.', 'https://drive.google.com/file/d/1ApwtxNupjkD4QNDNh_v42HX10Ok42s_B/preview')">Movie 1</div>
+          <div class="movie-item" onclick="showMovieDetails('Movie 2', 'This is a description for Movie 2.', 'https://drive.google.com/file/d/FILE_ID/preview')">Movie 2</div>
+          <div class="movie-item" onclick="showMovieDetails('Movie 3', 'This is a description for Movie 3.', 'https://drive.google.com/file/d/FILE_ID/preview')">Movie 3</div>
+          <div class="movie-item" onclick="showMovieDetails('Movie 4', 'This is a description for Movie 4.', 'https://drive.google.com/file/d/FILE_ID/preview')">Movie 4</div>
+          <div class="movie-item" onclick="showMovieDetails('Movie 5', 'This is a description for Movie 5.', 'https://drive.google.com/file/d/FILE_ID/preview')">Movie 5</div>
         </div>
-    </div>
-    <!-- Hero Section -->
-    <div class="hero">
-        <h1>Unlimited Movies, TV Shows, and More.</h1>
-        <button>Watch Now</button>
-    </div>
-    <!-- Trending Section -->
-    <div class="section">
-        <h2>Trending Now</h2>
-        <div class="video-row">
-            <a href="video1.html" class="video-card">
-                <img src="https://via.placeholder.com/300x150" alt="Video 1">
-                <h3>Video Title 1</h3>
-            </a>
-            <a href="video2.html" class="video-card">
-                <img src="https://via.placeholder.com/300x150" alt="Video 2">
-                <h3>Video Title 2</h3>
-            </a>
-            <a href="video3.html" class="video-card">
-                <img src="https://via.placeholder.com/300x150" alt="Video 3">
-                <h3>Video Title 3</h3>
-            </a>
-            <!-- Add more video cards -->
+
+        <div class="movie-details" id="movieDetails">
+          <div class="movie-title" id="movieTitle"></div>
+          <div class="movie-description" id="movieDescription"></div>
+          <iframe id="moviePlayer" src="" style="display:none;"></iframe>
         </div>
+      </div>
     </div>
-    <!-- Footer -->
-    <div class="footer">
-        &copy; 2024 Netflix Clone. All Rights Reserved.
-    </div>
-</body>
+
+    <script>
+      // Function to show movie details and store last watched movie
+      function showMovieDetails(title, description, videoUrl) {
+        document.getElementById('movieTitle').innerText = title;
+        document.getElementById('movieDescription').innerText = description;
+        document.getElementById('moviePlayer').src = videoUrl;
+        document.getElementById('movieDetails').style.display = 'block';
+        document.getElementById('moviePlayer').style.display = 'block';
+
+        // Save the last watched movie to local storage
+        localStorage.setItem('lastWatchedMovie', JSON.stringify({ title, description, videoUrl }));
+      }
+
+      // Function to check if there's a last watched movie and display it
+      function loadLastWatchedMovie() {
+        const lastWatchedMovie = JSON.parse(localStorage.getItem('lastWatchedMovie'));
+
+        if (lastWatchedMovie) {
+          showMovieDetails(lastWatchedMovie.title, lastWatchedMovie.description, lastWatchedMovie.videoUrl);
+        }
+      }
+
+      // Load the last watched movie when the page loads
+      window.onload = loadLastWatchedMovie;
+    </script>
+
+  </body>
 </html>
