@@ -1,103 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Movie Player</title>
+    <title>Movie Streaming</title>
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #000;
-        color: white;
-      }
-      .navbar {
-        display: flex;
-        justify-content: center;
-        padding: 15px;
-        background-color: #111;
-      }
-      .navbar img {
-        width: 150px;
-      }
-      .movies-list {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        padding: 20px;
-      }
-      .movie-item {
-        width: 200px;
-        height: 300px;
-        margin: 10px;
-        border-radius: 5px;
-        cursor: pointer;
-        background-color: #444;
-        position: relative;
-        overflow: hidden;
-        transition: transform 0.3s, box-shadow 0.3s;
-      }
-      .movie-item:hover {
-        transform: scale(1.1);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
-      }
-      .movie-item img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: opacity 0.3s;
-      }
-      .movie-details {
-        display: none;
-        text-align: center;
-        margin: 20px auto;
-      }
-      iframe {
-        width: 80%;
-        height: 400px;
-        border: none;
-        display: block;
-        margin: 0 auto;
-      }
+        /* Body and general layout */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #111;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Container to hold all movies */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 50px;
+        }
+
+        /* Individual movie item */
+        .movie-item {
+            position: relative;
+            margin: 15px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .movie-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Triangle-shaped header container */
+        .header {
+            width: 250px;
+            height: 250px;
+            position: relative;
+            clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Header image styling */
+        .header-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        /* Hover effect on the header image */
+        .movie-item:hover .header-image {
+            transform: scale(1.1);
+        }
+
+        /* Video player modal styling */
+        .video-player {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        /* Video iframe inside the modal */
+        .video-player iframe {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 5px;
+        }
+
+        /* Close button */
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #cc0000;
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
 
-    <div class="navbar">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix Logo">
+    <!-- Movie Collection Container -->
+    <div class="container" id="movie-container">
+        <!-- Movie items will be dynamically inserted here -->
     </div>
 
-    <div class="movies-list">
-      <!-- Movie 1 -->
-      <div class="movie-item" onclick="showMovie('https://www.garfield-film.ch/_media/cba6d9fa5d/sony/ba1084/artwork-en.jpg', 'https://drive.google.com/file/d/1ApwtxNupjkD4QNDNh_v42HX10Ok42s_B/preview')">
-        <img src="https://example.com/image1.jpg" alt="Movie 1">
-      </div>
-      <!-- Movie 2 -->
-      <div class="movie-item" onclick="showMovie('https://example.com/image2.jpg', 'https://drive.google.com/file/d/FILE_ID/preview')">
-        <img src="https://example.com/image2.jpg" alt="Movie 2">
-      </div>
-      <!-- Movie 3 -->
-      <div class="movie-item" onclick="showMovie('https://example.com/image3.jpg', 'https://drive.google.com/file/d/FILE_ID/preview')">
-        <img src="https://example.com/image3.jpg" alt="Movie 3">
-      </div>
-    </div>
-
-    <div class="movie-details" id="movieDetails">
-      <img id="movieImage" style="max-width: 100%; border-radius: 5px;">
-      <iframe id="moviePlayer"></iframe>
+    <!-- Video Player Modal -->
+    <div class="video-player" id="video-player">
+        <iframe id="video-frame" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+        <button onclick="closeVideo()">Close</button>
     </div>
 
     <script>
-      function showMovie(imageUrl, videoUrl) {
-        // Set image and video source
-        document.getElementById('movieImage').src = imageUrl;
-        document.getElementById('moviePlayer').src = videoUrl;
+        // Array to hold movie data (name, image URL, video URL)
+        const movies = [
+            {
+                title: "The garfield movie",
+                image: "https://www.garfield-film.ch/_media/cba6d9fa5d/sony/ba1084/artwork-en.jpg",
+                videoUrl: "https://drive.google.com/file/d/1ApwtxNupjkD4QNDNh_v42HX10Ok42s_B/preview"
+            },
+            {
+                title: "Movie 2",
+                image: "https://via.placeholder.com/250",
+                videoUrl: "https://www.youtube.com/embed/oHg5SJYRHA0"
+            },
+            // Add more movies as needed
+        ];
 
-        // Display the movie details
-        document.getElementById('movieDetails').style.display = 'block';
-      }
+        // Function to dynamically load movie items
+        function loadMovies() {
+            const container = document.getElementById('movie-container');
+            container.innerHTML = '';  // Clear any existing content
+
+            movies.forEach(movie => {
+                const movieItem = document.createElement('div');
+                movieItem.className = 'movie-item';
+                movieItem.onclick = () => openVideo(movie.videoUrl);
+
+                const header = document.createElement('div');
+                header.className = 'header';
+                const image = document.createElement('img');
+                image.src = movie.image;
+                image.alt = movie.title;
+                image.className = 'header-image';
+                header.appendChild(image);
+
+                movieItem.appendChild(header);
+                container.appendChild(movieItem);
+            });
+        }
+
+        // Function to open the video in a modal
+        function openVideo(videoUrl) {
+            const videoPlayer = document.getElementById('video-player');
+            const videoFrame = document.getElementById('video-frame');
+            videoPlayer.style.display = 'block';
+            videoFrame.src = videoUrl;
+        }
+
+        // Function to close the video modal
+        function closeVideo() {
+            const videoPlayer = document.getElementById('video-player');
+            const videoFrame = document.getElementById('video-frame');
+            videoPlayer.style.display = 'none';
+            videoFrame.src = '';
+        }
+
+        // Load movies on page load
+        window.onload = loadMovies;
     </script>
-  </body>
+
+</body>
 </html>
