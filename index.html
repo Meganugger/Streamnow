@@ -3,83 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movie Streamer</title>
+    <title>Sival - Movie Streaming</title>
     <style>
-        /* Reset margin and padding */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        /* General Body Styling */
         body {
-            background-color: #111;
             font-family: 'Arial', sans-serif;
-            color: white;
+            background: linear-gradient(135deg, #121212, #1c1c1c);
+            color: #e5e5e5;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             height: 100vh;
-            margin: 0;
+            overflow: hidden;
+            padding: 20px;
         }
 
-        /* Header Section */
+        /* Header */
         header {
             text-align: center;
-            padding: 30px 0;
-            background-color: #1c1c1c;
-            width: 100%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            margin-bottom: 40px;
         }
 
         header h1 {
-            font-size: 48px;
-            letter-spacing: 2px;
+            font-size: 80px;
+            color: #ff5252;
             font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: transform 0.3s ease, color 0.3s ease;
         }
 
-        /* Movie Section */
+        header h1:hover {
+            transform: scale(1.1);
+            color: #ff6f6f;
+        }
+
+        /* Movie Container */
         .movie-container {
             display: flex;
-            overflow-x: auto;
-            gap: 30px;
-            padding: 20px;
-            width: 90%;
-            max-width: 1100px;
-            margin-top: 30px;
-            justify-content: flex-start;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 1100px;
+            margin-top: 40px;
         }
 
-        /* Individual Movie Poster */
-        .movie-item {
-            position: relative;
-            width: 220px;
-            height: 330px;
-            background-color: #333;
-            border-radius: 12px;
+        /* Trailer Box */
+        .trailer {
+            width: 100%;
+            max-width: 960px;
+            height: 540px;
+            border-radius: 15px;
             overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            position: relative;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
         }
 
-        .movie-item:hover {
+        .trailer:hover {
             transform: scale(1.05);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.8);
         }
 
-        .movie-item img {
+        .trailer iframe {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
+            border: none;
         }
 
-        .movie-item:hover img {
-            transform: scale(1.1);
+        /* Description Box */
+        .description {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #ddd;
+            padding: 30px;
+            border-radius: 15px;
+            font-size: 18px;
+            text-align: center;
+            width: 100%;
+            max-width: 960px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .description:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+            transform: scale(1.05);
+        }
+
+        /* Play Button */
+        .play-btn {
+            background-color: #ff5252;
+            color: white;
+            font-size: 24px;
+            padding: 18px 35px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .play-btn:hover {
+            background-color: #ff6f6f;
+            transform: scale(1.05);
         }
 
         /* Video Modal */
@@ -90,75 +124,119 @@
             left: 50%;
             transform: translate(-50%, -50%);
             width: 80%;
-            max-width: 1000px;
-            background-color: #000;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+            max-width: 1100px;
+            background-color: #121212;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.8);
             z-index: 1000;
-            transition: opacity 0.3s ease;
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .video-modal.show {
+            display: block;
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
         }
 
         .video-modal iframe {
             width: 100%;
-            height: 500px;
-            border-radius: 10px;
-            border: none;
+            height: 600px;
+            border-radius: 12px;
         }
 
+        /* Close Button */
         .close-btn {
             position: absolute;
             top: 10px;
             right: 10px;
-            padding: 12px;
-            background-color: #ff4040;
+            padding: 10px;
+            background-color: #ff5252;
             border: none;
             color: white;
-            font-size: 18px;
+            font-size: 22px;
             cursor: pointer;
             border-radius: 50%;
+            transition: background-color 0.3s ease;
         }
 
         .close-btn:hover {
-            background-color: #cc3333;
+            background-color: #ff6f6f;
         }
 
-        /* Fade-in effect for video modal */
-        .video-modal.show {
-            display: block;
-            opacity: 1;
-        }
-
-        /* Styling for body overlay (background darkening when modal is open) */
+        /* Overlay Background */
         .overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 999;
+            background: rgba(0, 0, 0, 0.8);
             display: none;
+            z-index: 999;
         }
 
         .overlay.show {
             display: block;
         }
+
+        /* Hover Animation on Play Button */
+        .play-btn:hover {
+            background-color: #ff6f6f;
+            transform: scale(1.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 60px;
+            }
+
+            .movie-container {
+                width: 100%;
+                padding: 0 15px;
+            }
+
+            .trailer {
+                max-width: 100%;
+            }
+
+            .description {
+                font-size: 16px;
+            }
+
+            .play-btn {
+                font-size: 22px;
+                padding: 12px 25px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Overlay (background darkening when modal is open) -->
+    <!-- Overlay for Video Modal -->
     <div class="overlay" id="overlay" onclick="closeModal()"></div>
 
-    <!-- Header Section -->
+    <!-- Header -->
     <header>
-        <h1>Movie Streamer</h1>
+        <h1>Sival</h1>
     </header>
 
-    <!-- Movie Container -->
-    <div class="movie-container" id="movie-container">
-        <!-- Movie items will be dynamically added here -->
+    <!-- Movie Section -->
+    <div class="movie-container">
+        <!-- Trailer Box -->
+        <div class="trailer">
+            <iframe id="trailer-frame" src="https://www.youtube.com/watch?v=IeFWNtMo1Fs&ab" frameborder="0" allowfullscreen></iframe>
+        </div>
+
+        <!-- Description Box -->
+        <div class="description">
+            <p>Garfield s'apprête à vivre une aventure sauvage en plein air. Après des retrouvailles inattendues avec son père disparu depuis longtemps - le chat Vic - Garfield et Odie sont contraints d'abandonner leur vie choyée pour rejoindre Vic.</p>
+        </div>
+
+        <!-- Play Button -->
+        <button class="play-btn" onclick="openModal('https://drive.google.com/file/d/1ApwtxNupjkD4QNDNh_v42HX10Ok42s_B/preview')">Watch Now</button>
     </div>
 
     <!-- Video Modal -->
@@ -168,46 +246,7 @@
     </div>
 
     <script>
-        // Array to hold movie data (name, image URL, video URL)
-        const movies = [
-            {
-                title: "Movie 1",
-                image: "https://www.garfield-film.ch/_media/cba6d9fa5d/sony/ba1084/artwork-en.jpg",
-                videoUrl: "https://drive.google.com/file/d/1ApwtxNupjkD4QNDNh_v42HX10Ok42s_B/preview"
-            },
-            {
-                title: "Movie 2",
-                image: "https://via.placeholder.com/220x330",
-                videoUrl: "https://www.youtube.com/embed/oHg5SJYRHA0"
-            },
-            {
-                title: "Movie 3",
-                image: "https://via.placeholder.com/220x330",
-                videoUrl: "https://www.youtube.com/embed/tgbNymZ7vqY"
-            },
-            // Add more movies here
-        ];
-
-        // Function to load movies dynamically
-        function loadMovies() {
-            const container = document.getElementById('movie-container');
-            container.innerHTML = ''; // Clear the existing content
-
-            movies.forEach(movie => {
-                const movieItem = document.createElement('div');
-                movieItem.className = 'movie-item';
-                movieItem.onclick = () => openModal(movie.videoUrl);
-
-                const img = document.createElement('img');
-                img.src = movie.image;
-                img.alt = movie.title;
-                movieItem.appendChild(img);
-
-                container.appendChild(movieItem);
-            });
-        }
-
-        // Function to open the video modal
+        // Function to Open Modal with Video
         function openModal(videoUrl) {
             const modal = document.getElementById('video-modal');
             const overlay = document.getElementById('overlay');
@@ -217,18 +256,15 @@
             videoFrame.src = videoUrl;
         }
 
-        // Function to close the video modal
+        // Function to Close Modal
         function closeModal() {
             const modal = document.getElementById('video-modal');
             const overlay = document.getElementById('overlay');
             const videoFrame = document.getElementById('video-frame');
             modal.classList.remove('show');
             overlay.classList.remove('show');
-            videoFrame.src = ''; // Reset the video URL
+            videoFrame.src = ''; // Reset the video URL to stop the video
         }
-
-        // Load movies on page load
-        window.onload = loadMovies;
     </script>
 
 </body>
