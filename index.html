@@ -3,16 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Viewer</title>
+    <title>Netflix Clone</title>
+    <style>
+        /* General Styling */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #141414;
+            color: white;
+        }
+        a {
+            text-decoration: none;
+            color: white;
+        }
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 40px;
+            background-color: #141414;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        .header .logo {
+            color: #e50914;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .header .nav a {
+            margin: 0 15px;
+            font-size: 16px;
+        }
+        .header .nav a:hover {
+            text-decoration: underline;
+        }
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            height: 500px;
+            background: url('https://www.whats-on-netflix.com/wp-content/uploads/2019/08/netflix-background-image-1.jpg') no-repeat center center / cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            color: white;
+        }
+        .hero h1 {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+        .hero button {
+            background-color: #e50914;
+            color: white;
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .hero button:hover {
+            background-color: #b20710;
+        }
+        /* Section Styling */
+        .section {
+            padding: 40px;
+        }
+        .section h2 {
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        .video-row {
+            display: flex;
+            overflow-x: auto;
+            gap: 20px;
+        }
+        .video-card {
+            flex: 0 0 300px;
+            background-color: #333;
+            border-radius: 5px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+        }
+        .video-card img {
+            width: 100%;
+            display: block;
+        }
+        .video-card h3 {
+            padding: 10px;
+            font-size: 18px;
+            background-color: rgba(0, 0, 0, 0.8);
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+        }
+        /* Footer */
+        .footer {
+            padding: 20px;
+            text-align: center;
+            background-color: #141414;
+            color: #aaa;
+        }
+    </style>
 </head>
 <body>
-    <h1>Video Viewer</h1>
-    <iframe 
-        src="https://drive.google.com/file/d/1ApwtxNupjkD4QNDNh_v42HX10Ok42s_B/preview" 
-        width="640" 
-        height="360" 
-        frameborder="0" 
-        allowfullscreen>
-    </iframe>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">Netflix Clone</div>
+        <div class="nav">
+            <a href="#">Home</a>
+            <a href="#">TV Shows</a>
+            <a href="#">Movies</a>
+            <a href="#">My List</a>
+        </div>
+    </div>
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>Unlimited Movies, TV Shows, and More.</h1>
+        <button>Watch Now</button>
+    </div>
+    <!-- Trending Section -->
+    <div class="section">
+        <h2>Trending Now</h2>
+        <div class="video-row">
+            <a href="video1.html" class="video-card">
+                <img src="https://via.placeholder.com/300x150" alt="Video 1">
+                <h3>Video Title 1</h3>
+            </a>
+            <a href="video2.html" class="video-card">
+                <img src="https://via.placeholder.com/300x150" alt="Video 2">
+                <h3>Video Title 2</h3>
+            </a>
+            <a href="video3.html" class="video-card">
+                <img src="https://via.placeholder.com/300x150" alt="Video 3">
+                <h3>Video Title 3</h3>
+            </a>
+            <!-- Add more video cards -->
+        </div>
+    </div>
+    <!-- Footer -->
+    <div class="footer">
+        &copy; 2024 Netflix Clone. All Rights Reserved.
+    </div>
 </body>
 </html>
