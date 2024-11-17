@@ -3,111 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movie Streaming</title>
+    <title>Movie Streamer</title>
     <style>
-        /* Body and general layout */
+        /* General Body Styling */
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
+            font-family: Arial, sans-serif;
             background-color: #111;
             color: white;
-            overflow-x: hidden;
         }
 
-        /* Container to hold all movies */
-        .container {
+        /* Header Section */
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #1c1c1c;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        header h1 {
+            font-size: 36px;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+
+        /* Movie Section */
+        .movie-container {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 50px;
+            overflow-x: scroll;
+            padding: 20px;
+            gap: 20px;
+            -webkit-overflow-scrolling: touch;
         }
 
-        /* Individual movie item */
+        /* Individual Movie Poster */
         .movie-item {
             position: relative;
-            margin: 15px;
-            cursor: pointer;
+            width: 200px;
+            height: 300px;
+            background-color: #333;
+            border-radius: 10px;
+            overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
         }
 
         .movie-item:hover {
             transform: scale(1.05);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
         }
 
-        /* Triangle-shaped header container */
-        .header {
-            width: 250px;
-            height: 250px;
-            position: relative;
-            clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-            overflow: hidden;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Header image styling */
-        .header-image {
+        .movie-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.3s ease;
         }
 
-        /* Hover effect on the header image */
-        .movie-item:hover .header-image {
+        .movie-item:hover img {
             transform: scale(1.1);
         }
 
-        /* Video player modal styling */
-        .video-player {
+        /* Video Modal */
+        .video-modal {
             display: none;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 20px;
+            width: 80%;
+            max-width: 1000px;
+            background-color: #000;
             border-radius: 10px;
-            text-align: center;
+            padding: 20px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
         }
 
-        /* Video iframe inside the modal */
-        .video-player iframe {
-            max-width: 100%;
-            max-height: 80vh;
-            border-radius: 5px;
+        .video-modal iframe {
+            width: 100%;
+            height: 500px;
+            border-radius: 10px;
         }
 
-        /* Close button */
-        button {
-            margin-top: 10px;
-            padding: 10px 20px;
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 10px;
             background-color: #ff0000;
-            color: white;
             border: none;
+            color: white;
+            font-size: 18px;
             cursor: pointer;
-            font-size: 16px;
-            border-radius: 5px;
+            border-radius: 50%;
         }
 
-        button:hover {
+        .close-btn:hover {
             background-color: #cc0000;
         }
     </style>
 </head>
 <body>
 
-    <!-- Movie Collection Container -->
-    <div class="container" id="movie-container">
-        <!-- Movie items will be dynamically inserted here -->
+    <!-- Header Section -->
+    <header>
+        <h1>Movie Streamer</h1>
+    </header>
+
+    <!-- Movie Container -->
+    <div class="movie-container" id="movie-container">
+        <!-- Movie items will be dynamically added here -->
     </div>
 
-    <!-- Video Player Modal -->
-    <div class="video-player" id="video-player">
-        <iframe id="video-frame" width="560" height="315" frameborder="0" allowfullscreen></iframe>
-        <button onclick="closeVideo()">Close</button>
+    <!-- Video Modal -->
+    <div class="video-modal" id="video-modal">
+        <button class="close-btn" onclick="closeModal()">X</button>
+        <iframe id="video-frame" src="" frameborder="0" allowfullscreen></iframe>
     </div>
 
     <script>
@@ -120,49 +131,45 @@
             },
             {
                 title: "Movie 2",
-                image: "https://via.placeholder.com/250",
+                image: "https://via.placeholder.com/200x300",
                 videoUrl: "https://www.youtube.com/embed/oHg5SJYRHA0"
             },
-            // Add more movies as needed
+            // Add more movies here
         ];
 
-        // Function to dynamically load movie items
+        // Function to load movies dynamically
         function loadMovies() {
             const container = document.getElementById('movie-container');
-            container.innerHTML = '';  // Clear any existing content
+            container.innerHTML = ''; // Clear the existing content
 
             movies.forEach(movie => {
                 const movieItem = document.createElement('div');
                 movieItem.className = 'movie-item';
-                movieItem.onclick = () => openVideo(movie.videoUrl);
+                movieItem.onclick = () => openModal(movie.videoUrl);
 
-                const header = document.createElement('div');
-                header.className = 'header';
-                const image = document.createElement('img');
-                image.src = movie.image;
-                image.alt = movie.title;
-                image.className = 'header-image';
-                header.appendChild(image);
+                const img = document.createElement('img');
+                img.src = movie.image;
+                img.alt = movie.title;
+                movieItem.appendChild(img);
 
-                movieItem.appendChild(header);
                 container.appendChild(movieItem);
             });
         }
 
-        // Function to open the video in a modal
-        function openVideo(videoUrl) {
-            const videoPlayer = document.getElementById('video-player');
+        // Function to open the video modal
+        function openModal(videoUrl) {
+            const modal = document.getElementById('video-modal');
             const videoFrame = document.getElementById('video-frame');
-            videoPlayer.style.display = 'block';
+            modal.style.display = 'block';
             videoFrame.src = videoUrl;
         }
 
         // Function to close the video modal
-        function closeVideo() {
-            const videoPlayer = document.getElementById('video-player');
+        function closeModal() {
+            const modal = document.getElementById('video-modal');
             const videoFrame = document.getElementById('video-frame');
-            videoPlayer.style.display = 'none';
-            videoFrame.src = '';
+            modal.style.display = 'none';
+            videoFrame.src = ''; // Reset the video URL
         }
 
         // Load movies on page load
