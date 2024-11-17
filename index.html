@@ -55,27 +55,39 @@
             margin-top: 40px;
         }
 
-        /* Trailer Box */
-        .trailer {
-            width: 100%;
-            max-width: 960px;
-            height: 540px;
+        /* Rectangular Boxes */
+        .movie-box {
+            width: 80%;
+            max-width: 900px;
+            height: 200px;
+            margin: 10px 0;
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
             border-radius: 15px;
-            overflow: hidden;
-            position: relative;
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
+            cursor: pointer;
             transition: transform 0.4s ease, box-shadow 0.4s ease;
         }
 
-        .trailer:hover {
+        .movie-box:hover {
             transform: scale(1.05);
             box-shadow: 0 25px 40px rgba(0, 0, 0, 0.8);
         }
 
-        .trailer iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
+        .movie-box img {
+            width: 50px;
+            height: 50px;
+            margin-right: 20px;
+        }
+
+        .movie-box h2 {
+            font-size: 24px;
+            color: #ff5252;
+            flex-grow: 1;
         }
 
         /* Description Box */
@@ -198,7 +210,7 @@
                 padding: 0 15px;
             }
 
-            .trailer {
+            .movie-box {
                 max-width: 100%;
             }
 
@@ -225,9 +237,20 @@
 
     <!-- Movie Section -->
     <div class="movie-container">
-        <!-- Trailer Box -->
-        <div class="trailer">
-            <iframe id="trailer-frame" src="https://www.youtube.com/watch?v=IeFWNtMo1Fs&ab" frameborder="0" allowfullscreen></iframe>
+        <!-- Movie Rectangles -->
+        <div class="movie-box" onclick="openModal('https://www.youtube.com/watch?v=IeFWNtMo1Fs')">
+            <img src="https://www.garfield-film.ch/_media/cba6d9fa5d/sony/ba1084/artwork-en.jpg" alt="Movie Thumbnail">
+            <h2>Movie 1 - The garfield movie</h2>
+        </div>
+
+        <div class="movie-box" onclick="openModal('https://www.youtube.com/watch?v=dQw4w9WgXcQ')">
+            <img src="https://via.placeholder.com/50" alt="Movie Thumbnail">
+            <h2>Movie 2 - Epic Journey</h2>
+        </div>
+
+        <div class="movie-box" onclick="openModal('https://www.youtube.com/watch?v=dQw4w9WgXcQ')">
+            <img src="https://via.placeholder.com/50" alt="Movie Thumbnail">
+            <h2>Movie 3 - Dark Secrets</h2>
         </div>
 
         <!-- Description Box -->
@@ -242,28 +265,20 @@
     <!-- Video Modal -->
     <div class="video-modal" id="video-modal">
         <button class="close-btn" onclick="closeModal()">X</button>
-        <iframe id="video-frame" src="" frameborder="0" allowfullscreen></iframe>
+        <iframe id="video-frame" src="" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
 
     <script>
-        // Function to Open Modal with Video
-        function openModal(videoUrl) {
-            const modal = document.getElementById('video-modal');
-            const overlay = document.getElementById('overlay');
-            const videoFrame = document.getElementById('video-frame');
-            modal.classList.add('show');
-            overlay.classList.add('show');
-            videoFrame.src = videoUrl;
+        function openModal(videoURL) {
+            document.getElementById("overlay").classList.add("show");
+            document.getElementById("video-modal").classList.add("show");
+            document.getElementById("video-frame").src = videoURL;
         }
 
-        // Function to Close Modal
         function closeModal() {
-            const modal = document.getElementById('video-modal');
-            const overlay = document.getElementById('overlay');
-            const videoFrame = document.getElementById('video-frame');
-            modal.classList.remove('show');
-            overlay.classList.remove('show');
-            videoFrame.src = ''; // Reset the video URL to stop the video
+            document.getElementById("overlay").classList.remove("show");
+            document.getElementById("video-modal").classList.remove("show");
+            document.getElementById("video-frame").src = "";
         }
     </script>
 
