@@ -25,12 +25,49 @@
             padding: 20px;
             text-align: center;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 999;
         }
         header h1 {
             color: #e50914;
             font-size: 48px;
             font-weight: bold;
             letter-spacing: 2px;
+        }
+        nav {
+            position: sticky;
+            top: 0;
+            background-color: #111;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+        nav a {
+            color: #fff;
+            font-size: 18px;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #e50914;
+        }
+        .search-bar {
+            width: 80%;
+            margin: 20px auto;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #333;
+            color: white;
+            font-size: 18px;
+            outline: none;
+            transition: background-color 0.3s;
+        }
+        .search-bar:focus {
+            background-color: #444;
         }
         .movie-box {
             background-color: #333;
@@ -85,8 +122,8 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            width: 70%;
-            height: 80%;
+            width: 80%;
+            height: 85%;
             color: white;
             animation: fadeIn 0.5s ease-in;
         }
@@ -121,7 +158,7 @@
             background-color: #f40612;
         }
         .modal-content iframe {
-            max-width: 800px;
+            max-width: 100%;
             max-height: 400px;
             border-radius: 10px;
         }
@@ -182,54 +219,76 @@
         <h1>StreamNow</h1>
     </header>
 
-    <!-- Movie Listings -->
-    <div class="category">
-        <h3>Trending Movies</h3>
-        <div class="content" id="movieList">
-            <!-- Movie 1 -->
-            <div class="movie-box" onclick="openModal('Garfield: Héros malgré lui', 'Garfield, the famous indoor cat, embarks on an adventurous heist with his father and dog.', 'https://www.garfield.movie/video/trailer2.mp4', 'https://drive.google.com/file/d/1ApwtxNupjkD4QNDNh_v42HX10Ok42s_B/preview?usp=sharing')">
-                <img src="https://fr.web.img6.acsta.net/c_310_420/img/a8/48/a848eac086dc48b8b44caefdb9bdde3c.jpg" alt="Garfield Thumbnail">
-                <h4>Garfield: Héros malgré lui</h4>
-            </div>
-        </div>
-        <a href="#" class="load-more-btn" id="loadMoreBtn" onclick="loadMoreMovies()">Load More</a>
-    </div>
+    <!-- Navigation Bar -->
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#movies">Movies</a>
+        <a href="#tv-shows">TV Shows</a>
+        <a href="#genres">Genres</a>
+    </nav>
 
-    <!-- Modal with Video Embed -->
-    <div class="modal" id="movieModal">
+    <!-- Search Bar -->
+    <input type="text" class="search-bar" placeholder="Search movies and TV shows..." id="searchBar">
+
+    <!-- Movie Categories -->
+    <section id="movies" class="category">
+        <h3>Popular Movies</h3>
+        <div class="content" id="movieList">
+            <!-- Movie Boxes dynamically added here -->
+        </div>
+        <a href="javascript:void(0)" class="load-more-btn" onclick="loadMoreMovies()">Load More</a>
+    </section>
+
+    <!-- Modal for Movie Details -->
+    <div id="movieModal" class="modal">
         <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
             <h2 id="movieTitle"></h2>
             <p id="movieDescription"></p>
-            <div class="video-container">
-                <iframe id="movieTrailer" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-            </div>
+            <iframe id="movieTrailer" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             <div class="buttons">
-                <a href="#" id="watchNowBtn" target="_blank">Watch Now</a>
+                <a id="watchNowBtn" href="" target="_blank">Watch Now</a>
             </div>
-            <span class="close-btn" onclick="closeModal()">&times;</span>
         </div>
     </div>
 
     <script>
-        // Open Modal
-        function openModal(title, description, trailerLink, watchNowLink) {
+        function openModal(title, description, trailerUrl, watchNowUrl) {
             document.getElementById("movieTitle").innerText = title;
             document.getElementById("movieDescription").innerText = description;
-            document.getElementById("movieTrailer").src = trailerLink;
-            document.getElementById("watchNowBtn").href = watchNowLink;
-            document.getElementById("movieModal").style.display = 'flex';
+            document.getElementById("movieTrailer").src = trailerUrl;
+            document.getElementById("watchNowBtn").href = watchNowUrl;
+            document.getElementById("movieModal").style.display = "flex";
         }
 
-        // Close Modal
         function closeModal() {
-            document.getElementById("movieModal").style.display = 'none';
-            document.getElementById("movieTrailer").src = '';
+            document.getElementById("movieModal").style.display = "none";
+            document.getElementById("movieTrailer").src = ""; // Stop video on close
         }
 
-        // Load More Movies (example)
         function loadMoreMovies() {
-            // For now, it just logs a message. You can add more movie elements here.
-            alert("Loading more movies...");
+            const moreMovies = [
+                { title: 'New Movie 1', description: 'Description for new movie 1', thumbnail: 'thumbnail_url', trailerUrl: 'trailer_url', watchNowUrl: 'watch_url' },
+                { title: 'New Movie 2', description: 'Description for new movie 2', thumbnail: 'thumbnail_url', trailerUrl: 'trailer_url', watchNowUrl: 'watch_url' }
+            ];
+
+            moreMovies.forEach(movie => {
+                const movieBox = document.createElement('div');
+                movieBox.classList.add('movie-box');
+                movieBox.setAttribute('onclick', `openModal('${movie.title}', '${movie.description}', '${movie.trailerUrl}', '${movie.watchNowUrl}')`);
+
+                const img = document.createElement('img');
+                img.src = movie.thumbnail;
+                img.alt = movie.title;
+
+                const h4 = document.createElement('h4');
+                h4.innerText = movie.title;
+
+                movieBox.appendChild(img);
+                movieBox.appendChild(h4);
+
+                document.getElementById('movieList').appendChild(movieBox);
+            });
         }
     </script>
 </body>
