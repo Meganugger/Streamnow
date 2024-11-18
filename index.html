@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StreamNow - Movies & TV Shows</title>
     <style>
-        /* General Reset */
         * {
             margin: 0;
             padding: 0;
@@ -19,12 +18,9 @@
             overflow-x: hidden;
             background-image: url('https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/f562aaf4-5dbb-4603-a32b-6ef6c2230136/dh0w8qv-9d8ee6b2-b41a-4681-ab9b-8a227560dc75.jpg/v1/fill/w_1192,h_670,q_70,strp/the_netflix_login_background__canada__2024___by_logofeveryt_dh0w8qv-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NzIwIiwicGF0aCI6IlwvZlwvZjU2MmFhZjQtNWRiYi00NjAzLWEzMmItNmVmNmMyMjMwMTM2XC9kaDB3OHF2LTlkOGVlNmIyLWI0MWEtNDY4MS1hYjliLThhMjI3NTYwZGM3NS5qcGciLCJ3aWR0aCI6Ijw9MTI4MCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.LOYKSxIDqfPwWHR0SSJ-ugGQ6bECF0yO6Cmc0F26CQs');
             background-size: cover;
-            background-position: center;
         }
-
-        /* Header */
         header {
-            background-color: #111;
+            background-color: rgba(0, 0, 0, 0.7);
             padding: 20px;
             text-align: center;
         }
@@ -32,8 +28,6 @@
             color: #e50914;
             font-size: 48px;
         }
-
-        /* Movie Box with Description, Trailer, and Watch Now Button */
         .movie-box {
             background-color: #333;
             margin: 30px;
@@ -59,8 +53,6 @@
             font-size: 18px;
             margin-top: 15px;
         }
-
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -88,8 +80,6 @@
             color: white;
             animation: fadeIn 0.5s ease-in;
         }
-
-        /* Modal Elements */
         .modal-content h2 {
             margin-bottom: 10px;
             font-size: 32px;
@@ -100,7 +90,7 @@
             text-align: left;
             max-width: 600px;
         }
-        .modal-content .buttons {
+        .buttons {
             margin-top: 20px;
             display: flex;
             gap: 20px;
@@ -116,21 +106,11 @@
         .buttons a:hover {
             background-color: #f40612;
         }
-
-        /* Trailer and Description Layout */
-        .modal-content .video-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            width: 100%;
-        }
         .modal-content iframe {
             max-width: 600px;
             max-height: 300px;
             border-radius: 10px;
         }
-
-        /* Close Button */
         .close-btn {
             position: absolute;
             top: 10px;
@@ -139,14 +119,10 @@
             color: white;
             cursor: pointer;
         }
-
-        /* Animation */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
-
-        /* Category Section */
         .category {
             padding: 40px 20px;
             text-align: center;
@@ -164,8 +140,6 @@
     </style>
 </head>
 <body>
-
-    <!-- Header -->
     <header>
         <h1>StreamNow</h1>
     </header>
@@ -182,34 +156,33 @@
         </div>
     </div>
 
-    <!-- Modal Template -->
-    <div id="movieModal" class="modal">
+    <!-- Modal with Video Embed -->
+    <div class="modal" id="movieModal">
         <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
             <h2 id="movieTitle"></h2>
             <p id="movieDescription"></p>
             <div class="video-container">
-                <iframe id="movieTrailer" src="" frameborder="0" allowfullscreen></iframe>
+                <iframe id="movieTrailer" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
             <div class="buttons">
-                <a id="watchNowBtn" href="#" target="_blank">Watch Now</a>
+                <a href="#" id="watchNowBtn" target="_blank">Watch Now</a>
             </div>
+            <span class="close-btn" onclick="closeModal()">×</span>
         </div>
     </div>
 
     <script>
-        // Function to open the modal with movie details
         function openModal(title, description, trailerLink, watchLink) {
-            document.getElementById('movieTitle').textContent = title;
-            document.getElementById('movieDescription').textContent = description;
+            document.getElementById('movieTitle').innerText = title;
+            document.getElementById('movieDescription').innerText = description;
             document.getElementById('movieTrailer').src = trailerLink;
             document.getElementById('watchNowBtn').href = watchLink;
-            document.getElementById('movieModal').style.display = 'flex';
+            document.querySelector('.modal').style.display = 'flex';
         }
 
-        // Function to close the modal
         function closeModal() {
-            document.getElementById('movieModal').style.display = 'none';
+            document.querySelector('.modal').style.display = 'none';
+            document.getElementById('movieTrailer').src = ''; // Stop the video when closed
         }
     </script>
 </body>
