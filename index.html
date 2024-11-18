@@ -137,6 +137,23 @@
             gap: 20px;
             flex-wrap: wrap;
         }
+        #load-more-btn {
+            background-color: #e50914;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 40px;
+            display: block;
+            width: 200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        #load-more-btn:hover {
+            background-color: #f40612;
+        }
     </style>
 </head>
 <body>
@@ -147,13 +164,10 @@
     <!-- Movie Listings -->
     <div class="category">
         <h3>Trending Movies</h3>
-        <div class="content">
-            <!-- Movie 1 -->
-            <div class="movie-box" onclick="openModal('Garfield: Héros malgré lui', 'Garfield, the famous indoor cat, embarks on an adventurous heist with his father and dog.', 'https://www.garfield.movie/video/trailer2.mp4', 'https://drive.google.com/file/d/1ApwtxNupjkD4QNDNh_v42HX10Ok42s_B/preview?usp=sharing')">
-                <img src="https://fr.web.img6.acsta.net/c_310_420/img/a8/48/a848eac086dc48b8b44caefdb9bdde3c.jpg" alt="Garfield Thumbnail">
-                <h4>Garfield: Héros malgré lui</h4>
-            </div>
+        <div class="content" id="movie-list">
+            <!-- Movie items will be dynamically inserted here -->
         </div>
+        <button id="load-more-btn" onclick="loadMovies()">Load More</button>
     </div>
 
     <!-- Modal with Video Embed -->
@@ -172,18 +186,31 @@
     </div>
 
     <script>
-        function openModal(title, description, trailerLink, watchLink) {
-            document.getElementById('movieTitle').innerText = title;
-            document.getElementById('movieDescription').innerText = description;
-            document.getElementById('movieTrailer').src = trailerLink;
-            document.getElementById('watchNowBtn').href = watchLink;
-            document.querySelector('.modal').style.display = 'flex';
-        }
+        const movies = [
+            {
+                title: "Garfield: Héros malgré lui",
+                description: "Garfield, the famous indoor cat, embarks on an adventurous heist with his father and dog.",
+                thumbnail: "https://fr.web.img6.acsta.net/c_310_420/img/a8/48/a848eac086dc48b8b44caefdb9bdde3c.jpg",
+                trailer: "https://www.garfield.movie/video/trailer2.mp4",
+                watch: "https://drive.google.com/file/d/1ApwtxNupjkD4QNDNh_v42HX10Ok42s_B/preview?usp=sharing"
+            },
+            // Add more movie objects here
+        ];
 
-        function closeModal() {
-            document.querySelector('.modal').style.display = 'none';
-            document.getElementById('movieTrailer').src = ''; // Stop the video when closed
-        }
-    </script>
-</body>
-</html>
+        let currentMovieIndex = 0;
+        const moviesPerPage = 3;
+
+        function loadMovies() {
+            const movieList = document.getElementById('movie-list');
+            const loadMoreButton = document.getElementById('load-more-btn');
+            const end = currentMovieIndex + moviesPerPage;
+
+            for (let i = currentMovieIndex; i < end && i < movies.length; i++) {
+                const movie = movies[i];
+                const movieBox = document.createElement('div');
+                movieBox.classList.add('movie-box');
+                movieBox.onclick = () => openModal(movie.title, movie.description, movie.trailer, movie.watch);
+
+                movieBox.innerHTML = `
+                    <img src="${movie.thumbnail}" alt="${movie.title}">
+                    <h4>${movie.title}</h4>
