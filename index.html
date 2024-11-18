@@ -110,6 +110,7 @@
             max-width: 600px;
             max-height: 300px;
             border-radius: 10px;
+            pointer-events: none;
         }
         .close-btn {
             position: absolute;
@@ -137,21 +138,18 @@
             gap: 20px;
             flex-wrap: wrap;
         }
-        #load-more-btn {
+        .load-more-btn {
             background-color: #e50914;
             color: white;
-            padding: 15px 30px;
-            border-radius: 20px;
+            padding: 10px 20px;
             text-decoration: none;
+            border-radius: 20px;
             font-size: 16px;
-            cursor: pointer;
-            margin-top: 40px;
-            display: block;
-            width: 200px;
-            margin-left: auto;
-            margin-right: auto;
+            display: none;
+            margin-top: 20px;
+            text-align: center;
         }
-        #load-more-btn:hover {
+        .load-more-btn:hover {
             background-color: #f40612;
         }
     </style>
@@ -164,10 +162,14 @@
     <!-- Movie Listings -->
     <div class="category">
         <h3>Trending Movies</h3>
-        <div class="content" id="movie-list">
-            <!-- Movie items will be dynamically inserted here -->
+        <div class="content" id="movieList">
+            <!-- Movie 1 -->
+            <div class="movie-box" onclick="openModal('Garfield: Héros malgré lui', 'Garfield, the famous indoor cat, embarks on an adventurous heist with his father and dog.', 'https://www.garfield.movie/video/trailer2.mp4', 'https://drive.google.com/file/d/1ApwtxNupjkD4QNDNh_v42HX10Ok42s_B/preview?usp=sharing')">
+                <img src="https://fr.web.img6.acsta.net/c_310_420/img/a8/48/a848eac086dc48b8b44caefdb9bdde3c.jpg" alt="Garfield Thumbnail">
+                <h4>Garfield: Héros malgré lui</h4>
+            </div>
         </div>
-        <button id="load-more-btn" onclick="loadMovies()">Load More</button>
+        <a href="#" class="load-more-btn" id="loadMoreBtn" onclick="loadMoreMovies()">Load More</a>
     </div>
 
     <!-- Modal with Video Embed -->
@@ -186,31 +188,30 @@
     </div>
 
     <script>
-        const movies = [
-            {
-                title: "Garfield: Héros malgré lui",
-                description: "Garfield, the famous indoor cat, embarks on an adventurous heist with his father and dog.",
-                thumbnail: "https://fr.web.img6.acsta.net/c_310_420/img/a8/48/a848eac086dc48b8b44caefdb9bdde3c.jpg",
-                trailer: "https://www.garfield.movie/video/trailer2.mp4",
-                watch: "https://drive.google.com/file/d/1ApwtxNupjkD4QNDNh_v42HX10Ok42s_B/preview?usp=sharing"
-            },
-            // Add more movie objects here
-        ];
+        let moviesLoaded = 1;
 
-        let currentMovieIndex = 0;
-        const moviesPerPage = 3;
+        // Function to open movie modal
+        function openModal(title, description, trailerLink, watchLink) {
+            document.getElementById('movieTitle').innerText = title;
+            document.getElementById('movieDescription').innerText = description;
+            document.getElementById('movieTrailer').src = trailerLink;
+            document.getElementById('watchNowBtn').href = watchLink;
+            document.querySelector('.modal').style.display = 'flex';
+        }
 
-        function loadMovies() {
-            const movieList = document.getElementById('movie-list');
-            const loadMoreButton = document.getElementById('load-more-btn');
-            const end = currentMovieIndex + moviesPerPage;
+        // Function to close the movie modal
+        function closeModal() {
+            document.querySelector('.modal').style.display = 'none';
+        }
 
-            for (let i = currentMovieIndex; i < end && i < movies.length; i++) {
-                const movie = movies[i];
-                const movieBox = document.createElement('div');
-                movieBox.classList.add('movie-box');
-                movieBox.onclick = () => openModal(movie.title, movie.description, movie.trailer, movie.watch);
-
-                movieBox.innerHTML = `
-                    <img src="${movie.thumbnail}" alt="${movie.title}">
-                    <h4>${movie.title}</h4>
+        // Function to load more movies
+        function loadMoreMovies() {
+            // Logic to load more movies goes here (example: appending more .movie-box elements)
+            moviesLoaded += 1;
+            if (moviesLoaded > 3) {
+                document.getElementById('loadMoreBtn').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
