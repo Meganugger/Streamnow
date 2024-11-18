@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StreamNow - Movies & TV Shows</title>
     <style>
+        /* General Reset */
         * {
             margin: 0;
             padding: 0;
@@ -15,6 +16,10 @@
             background-color: #141414;
             color: white;
             line-height: 1.6;
+            overflow-x: hidden;
+            background-image: url('https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/f562aaf4-5dbb-4603-a32b-6ef6c2230136/dh0w8qv-9d8ee6b2-b41a-4681-ab9b-8a227560dc75.jpg/v1/fill/w_1192,h_670,q_70,strp/the_netflix_login_background__canada__2024___by_logofeveryt_dh0w8qv-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NzIwIiwicGF0aCI6IlwvZlwvZjU2MmFhZjQtNWRiYi00NjAzLWEzMmItNmVmNmMyMjMwMTM2XC9kaDB3OHF2LTlkOGVlNmIyLWI0MWEtNDY4MS1hYjliLThhMjI3NTYwZGM3NS5qcGciLCJ3aWR0aCI6Ijw9MTI4MCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.LOYKSxIDqfPwWHR0SSJ-ugGQ6bECF0yO6Cmc0F26CQs');
+            background-size: cover;
+            background-position: center;
         }
 
         /* Header */
@@ -27,36 +32,6 @@
             color: #e50914;
             font-size: 48px;
         }
-        header nav {
-            margin-top: 20px;
-        }
-        header nav ul {
-            display: flex;
-            justify-content: center;
-            list-style-type: none;
-        }
-        header nav ul li {
-            margin: 0 15px;
-        }
-        header nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-size: 18px;
-        }
-
-        /* Hero Section */
-        .hero {
-            background: url('https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/f562aaf4-5dbb-4603-a32b-6ef6c2230136/dh0w8qv-9d8ee6b2-b41a-4681-ab9b-8a227560dc75.jpg/v1/fill/w_1192,h_670,q_70,strp/the_netflix_login_background__canada__2024___by_logofeveryt_dh0w8qv-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NzIwIiwicGF0aCI6IlwvZlwvZjU2MmFhZjQtNWRiYi00NjAzLWEzMmItNmVmNmMyMjMwMTM2XC9kaDB3OHF2LTlkOGVlNmIyLWI0MWEtNDY4MS1hYjliLThhMjI3NTYwZGM3NS5qcGciLCJ3aWR0aCI6Ijw9MTI4MCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.LOYKSxIDqfPwWHR0SSJ-ugGQ6bECF0yO6Cmc0F26CQs') no-repeat center center/cover;
-            height: 500px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-        }
-        .hero h2 {
-            font-size: 48px;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
-        }
 
         /* Movie Box with Description, Trailer, and Watch Now Button */
         .movie-box {
@@ -68,6 +43,7 @@
             flex-direction: column;
             text-align: center;
             width: 250px;
+            cursor: pointer;
             transition: transform 0.3s ease;
         }
         .movie-box:hover {
@@ -83,16 +59,51 @@
             font-size: 18px;
             margin-top: 15px;
         }
-        .movie-box p {
-            font-size: 14px;
-            color: #bbb;
-            margin: 10px 0;
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.3s ease;
         }
-        .movie-box .buttons {
+        .modal-content {
+            background-color: #222;
+            padding: 30px;
+            border-radius: 10px;
+            position: relative;
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin-top: 15px;
+            align-items: center;
+            flex-direction: column;
+            width: 80%;
+            height: 80%;
+            color: white;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        /* Modal Elements */
+        .modal-content h2 {
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        .modal-content p {
+            margin-bottom: 20px;
+            font-size: 16px;
+            text-align: left;
+            max-width: 600px;
+        }
+        .modal-content .buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
         }
         .buttons a {
             background-color: #e50914;
@@ -104,6 +115,35 @@
         }
         .buttons a:hover {
             background-color: #f40612;
+        }
+
+        /* Trailer and Description Layout */
+        .modal-content .video-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 100%;
+        }
+        .modal-content iframe {
+            max-width: 600px;
+            max-height: 300px;
+            border-radius: 10px;
+        }
+
+        /* Close Button */
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         /* Category Section */
@@ -121,31 +161,6 @@
             gap: 20px;
             flex-wrap: wrap;
         }
-
-        /* Footer */
-        footer {
-            background-color: #111;
-            text-align: center;
-            padding: 20px;
-        }
-        footer p {
-            font-size: 16px;
-        }
-        footer a {
-            color: #e50914;
-            text-decoration: none;
-        }
-
-        /* Additional Styling */
-        .movie-box .trailer {
-            margin-top: 15px;
-            text-align: center;
-        }
-        iframe {
-            width: 100%;
-            height: 200px;
-            border-radius: 10px;
-        }
     </style>
 </head>
 <body>
@@ -153,293 +168,49 @@
     <!-- Header -->
     <header>
         <h1>StreamNow</h1>
-        <nav>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Trending</a></li>
-                <li><a href="#">Categories</a></li>
-            </ul>
-        </nav>
     </header>
-
-    <!-- Hero Section -->
-    <div class="hero">
-        <h2>Welcome to Sivalll</h2>
-    </div>
 
     <!-- Movie Listings -->
     <div class="category">
         <h3>Trending Movies</h3>
         <div class="content">
             <!-- Movie 1 -->
-            <div class="movie-box">
-                <img src="https://fr.web.img6.acsta.net/c_310_420/img/a8/48/a848eac086dc48b8b44caefdb9bdde3c.jpg" alt="Movie Thumbnail">
+            <div class="movie-box" onclick="openModal('Garfield: Héros malgré lui', 'Garfield, the famous indoor cat, embarks on an adventurous heist with his father and dog.', 'https://www.garfield.movie/video/trailer2.mp4', 'https://drive.google.com/file/d/1ApwtxNupjkD4QNDNh_v42HX10Ok42s_B/preview?usp=sharing')">
+                <img src="https://fr.web.img6.acsta.net/c_310_420/img/a8/48/a848eac086dc48b8b44caefdb9bdde3c.jpg" alt="Garfield Thumbnail">
                 <h4>Garfield: Héros malgré lui</h4>
-                <p>Garfield, the famous indoor cat, embarks on an adventurous heist with his father and dog.</p>
-                <div class="buttons">
-                    <a href="https://drive.google.com/file/d/1ApwtxNupjkD4QNDNh_v42HX10Ok42s_B/preview?usp=sharing" target="_blank">Watch Now</a>
-                    <a href="https://www.garfield.movie/video/trailer2.mp4" target="_blank">Trailer</a>
-                </div>
-                <div class="trailer">
-                    <iframe src="https://www.garfield.movie/video/trailer2.mp4" allowfullscreen></iframe>
-                </div>
-            </div>
-
-            <!-- Movie 2 -->
-            <div class="movie-box">
-                <img src="https://via.placeholder.com/250x150" alt="Movie Thumbnail">
-                <h4>Movie Title 2</h4>
-                <p>A brief description of the movie.</p>
-                <div class="buttons">
-                    <a href="https://drive.google.com/embed/yourfilelink" target="_blank">Watch Now</a>
-                    <a href="https://youtube.com/yourtrailerlink" target="_blank">Trailer</a>
-                </div>
-                <div class="trailer">
-                    <iframe src="https://www.youtube.com/embed/yourtrailerlink" allowfullscreen></iframe>
-                </div>
-            </div>
-
-            <!-- Movie 3 -->
-            <div class="movie-box">
-                <img src="https://via.placeholder.com/250x150" alt="Movie Thumbnail">
-                <h4>Movie Title 3</h4>
-                <p>A brief description of the movie.</p>
-                <div class="buttons">
-                    <a href="https://drive.google.com/embed/yourfilelink" target="_blank">Watch Now</a>
-                    <a href="https://youtube.com/yourtrailerlink" target="_blank">Trailer</a>
-                </div>
-                <div class="trailer">
-                    <iframe src="https://www.youtube.com/embed/yourtrailerlink" allowfullscreen></iframe>
-                </div>
             </div>
         </div>
-Here’s the updated HTML script for a streaming platform, following your requirements with movie categories, watch functionality, trailer previews, and a simple layout. The URLs you requested have been added to the movies for the "Watch Now" and "Trailer" links, and the background image has been correctly set. The structure now resembles the Amazon-style layout without user accounts:
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StreamNow - Movies & TV Shows</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #141414;
-            color: white;
-            line-height: 1.6;
-        }
-
-        /* Header */
-        header {
-            background-color: #111;
-            padding: 20px;
-            text-align: center;
-        }
-        header h1 {
-            color: #e50914;
-            font-size: 48px;
-        }
-        header nav {
-            margin-top: 20px;
-        }
-        header nav ul {
-            display: flex;
-            justify-content: center;
-            list-style-type: none;
-        }
-        header nav ul li {
-            margin: 0 15px;
-        }
-        header nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-size: 18px;
-        }
-
-        /* Hero Section */
-        .hero {
-            background: url('https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/f562aaf4-5dbb-4603-a32b-6ef6c2230136/dh0w8qv-9d8ee6b2-b41a-4681-ab9b-8a227560dc75.jpg/v1/fill/w_1192,h_670,q_70,strp/the_netflix_login_background__canada__2024___by_logofeveryt_dh0w8qv-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NzIwIiwicGF0aCI6IlwvZlwvZjU2MmFhZjQtNWRiYi00NjAzLWEzMmItNmVmNmMyMjMwMTM2XC9kaDB3OHF2LTlkOGVlNmIyLWI0MWEtNDY4MS1hYjliLThhMjI3NTYwZGM3NS5qcGciLCJ3aWR0aCI6Ijw9MTI4MCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.LOYKSxIDqfPwWHR0SSJ-ugGQ6bECF0yO6Cmc0F26CQs') no-repeat center center/cover;
-            height: 500px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-        }
-        .hero h2 {
-            font-size: 48px;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
-        }
-
-        /* Movie Box with Description, Trailer, and Watch Now Button */
-        .movie-box {
-            background-color: #333;
-            margin: 30px;
-            padding: 20px;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            text-align: center;
-            width: 250px;
-            transition: transform 0.3s ease;
-        }
-        .movie-box:hover {
-            transform: scale(1.05);
-        }
-        .movie-box img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-        .movie-box h4 {
-            font-size: 18px;
-            margin-top: 15px;
-        }
-        .movie-box p {
-            font-size: 14px;
-            color: #bbb;
-            margin: 10px 0;
-        }
-        .movie-box .buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 15px;
-        }
-        .buttons a {
-            background-color: #e50914;
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 20px;
-            font-size: 16px;
-        }
-        .buttons a:hover {
-            background-color: #f40612;
-        }
-
-        /* Category Section */
-        .category {
-            padding: 40px 20px;
-            text-align: center;
-        }
-        .category h3 {
-            font-size: 36px;
-            margin-bottom: 20px;
-        }
-        .category .content {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        /* Footer */
-        footer {
-            background-color: #111;
-            text-align: center;
-            padding: 20px;
-        }
-        footer p {
-            font-size: 16px;
-        }
-        footer a {
-            color: #e50914;
-            text-decoration: none;
-        }
-
-        /* Additional Styling */
-        .movie-box .trailer {
-            margin-top: 15px;
-            text-align: center;
-        }
-        iframe {
-            width: 100%;
-            height: 200px;
-            border-radius: 10px;
-        }
-    </style>
-</head>
-<body>
-
-    <!-- Header -->
-    <header>
-        <h1>StreamNow</h1>
-        <nav>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Trending</a></li>
-                <li><a href="#">Categories</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <!-- Hero Section -->
-    <div class="hero">
-        <h2>Welcome to StreamNow</h2>
     </div>
 
-    <!-- Movie Listings -->
-    <div class="category">
-        <h3>Trending Movies</h3>
-        <div class="content">
-            <!-- Movie 1 -->
-            <div class="movie-box">
-                <img src="https://fr.web.img6.acsta.net/c_310_420/img/a8/48/a848eac086dc48b8b44caefdb9bdde3c.jpg" alt="Movie Thumbnail">
-                <h4>Garfield: Héros malgré lui</h4>
-                <p>Garfield, the famous indoor cat, embarks on an adventurous heist with his father and dog.</p>
-                <div class="buttons">
-                    <a href="https://drive.google.com/file/d/1ApwtxNupjkD4QNDNh_v42HX10Ok42s_B/preview?usp=sharing" target="_blank">Watch Now</a>
-                    <a href="https://www.garfield.movie/video/trailer2.mp4" target="_blank">Trailer</a>
-                </div>
-                <div class="trailer">
-                    <iframe src="https://www.garfield.movie/video/trailer2.mp4" allowfullscreen></iframe>
-                </div>
+    <!-- Modal Template -->
+    <div id="movieModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2 id="movieTitle"></h2>
+            <p id="movieDescription"></p>
+            <div class="video-container">
+                <iframe id="movieTrailer" src="" frameborder="0" allowfullscreen></iframe>
             </div>
-
-            <!-- Movie 2 -->
-            <div class="movie-box">
-                <img src="https://via.placeholder.com/250x150" alt="Movie Thumbnail">
-                <h4>Movie Title 2</h4>
-                <p>A brief description of the movie.</p>
-                <div class="buttons">
-                    <a href="https://drive.google.com/embed/yourfilelink" target="_blank">Watch Now</a>
-                    <a href="https://youtube.com/yourtrailerlink" target="_blank">Trailer</a>
-                </div>
-                <div class="trailer">
-                    <iframe src="https://www.youtube.com/embed/yourtrailerlink" allowfullscreen></iframe>
-                </div>
+            <div class="buttons">
+                <a id="watchNowBtn" href="#" target="_blank">Watch Now</a>
             </div>
+        </div>
+    </div>
 
-            <!-- Movie 3 -->
-            <div class="movie-box">
-                <img src="https://via.placeholder.com/250x150" alt="Movie Thumbnail">
-                <h4>Movie Title 3</h4>
-                <p>A brief description of the movie.</p>
-                <div class="buttons">
-                    <a href="https://drive.google.com/embed/yourfilelink" target="_blank">Watch Now</a>
-                    <a href="https://youtube.com/yourtrailerlink" target="_blank">Trailer</a>
-                </div>
-                <div class="trailer">
-                    <iframe src="https://www.youtube.com/embed/yourtrailerlink" allowfullscreen></iframe>
-                </div>
-            </div>
-       It looks like you've built a solid HTML template for a streaming platform with a focus on movie categories, watch functionality, trailers, and a layout reminiscent of Amazon-style streaming services. Here's a brief summary of your code structure:
+    <script>
+        // Function to open the modal with movie details
+        function openModal(title, description, trailerLink, watchLink) {
+            document.getElementById('movieTitle').textContent = title;
+            document.getElementById('movieDescription').textContent = description;
+            document.getElementById('movieTrailer').src = trailerLink;
+            document.getElementById('watchNowBtn').href = watchLink;
+            document.getElementById('movieModal').style.display = 'flex';
+        }
 
-- **Header:** The header contains a logo and simple navigation for "Home," "Trending," and "Categories."
-- **Hero Section:** Displays a large background image with a welcoming title for the platform.
-- **Movie Listings:** Shows a selection of trending movies, each in a box with:
-  - Movie thumbnail.
-  - Title and brief description.
-  - Buttons to "Watch Now" and "Trailer," linking to Google Drive for streaming and a YouTube video for trailers.
-  - An embedded YouTube trailer preview.
-
-This template is easy to expand with more movies, trailers, and categories. You can customize the links and add more content dynamically based on user input.
-
-Let me know if you need additional adjustments!
+        // Function to close the modal
+        function closeModal() {
+            document.getElementById('movieModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
