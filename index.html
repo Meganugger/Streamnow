@@ -1,286 +1,280 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sival - Movie Streaming</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StreamHub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset some default styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #121212, #1c1c1c);
-            color: #e5e5e5;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            overflow: hidden;
-            padding: 20px;
-        }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #141414;
+      color: #fff;
+      overflow-x: hidden;
+    }
 
-        /* Header */
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
+    /* Header Section */
+    .header {
+      position: sticky;
+      top: 0;
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 10px 20px;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #fff;
+    }
 
-        header h1 {
-            font-size: 80px;
-            color: #ff5252;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: transform 0.3s ease, color 0.3s ease;
-        }
+    .header h1 {
+      font-size: 26px;
+      color: #e50914;
+      cursor: pointer;
+    }
 
-        header h1:hover {
-            transform: scale(1.1);
-            color: #ff6f6f;
-        }
+    .search-bar input {
+      padding: 10px;
+      border: 1px solid #555;
+      border-radius: 20px;
+      background-color: #333;
+      color: #fff;
+      font-size: 16px;
+    }
 
-        /* Movie Container */
-        .movie-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            max-width: 1100px;
-            margin-top: 40px;
-        }
+    .search-bar input::placeholder {
+      color: #bbb;
+    }
 
-        /* Rectangular Boxes */
-        .movie-box {
-            width: 80%;
-            max-width: 900px;
-            height: 200px;
-            margin: 10px 0;
-            background-color: #333;
-            color: #fff;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
-            cursor: pointer;
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-        }
+    /* Hero Section with background image */
+    .hero {
+      position: relative;
+      height: 90vh;
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/6/6a/Amazon_Prime_Video_logo.svg');
+      background-position: center;
+      background-size: cover;
+      color: white;
+      padding: 30px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    }
 
-        .movie-box:hover {
-            transform: scale(1.05);
-            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.8);
-        }
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1;
+    }
 
-        .movie-box img {
-            width: 50px;
-            height: 50px;
-            margin-right: 20px;
-        }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
 
-        .movie-box h2 {
-            font-size: 24px;
-            color: #ff5252;
-            flex-grow: 1;
-        }
+    .hero h2 {
+      font-size: 70px;
+      font-weight: bold;
+    }
 
-        /* Description Box */
-        .description {
-            background-color: rgba(0, 0, 0, 0.8);
-            color: #ddd;
-            padding: 30px;
-            border-radius: 15px;
-            font-size: 18px;
-            text-align: center;
-            width: 100%;
-            max-width: 960px;
-            margin-top: 20px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
+    .hero p {
+      font-size: 18px;
+      margin: 15px 0;
+      max-width: 600px;
+    }
 
-        .description:hover {
-            background-color: rgba(0, 0, 0, 0.9);
-            transform: scale(1.05);
-        }
+    .hero-buttons a {
+      background-color: #e50914;
+      color: white;
+      text-decoration: none;
+      padding: 15px 30px;
+      border-radius: 5px;
+      font-weight: bold;
+      margin-right: 15px;
+      transition: background-color 0.3s ease;
+    }
 
-        /* Play Button */
-        .play-btn {
-            background-color: #ff5252;
-            color: white;
-            font-size: 24px;
-            padding: 18px 35px;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            margin-top: 30px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s ease, background-color 0.3s ease;
-        }
+    .hero-buttons a:hover {
+      background-color: #b00710;
+    }
 
-        .play-btn:hover {
-            background-color: #ff6f6f;
-            transform: scale(1.05);
-        }
+    /* Movie Grid Section */
+    .section {
+      padding: 30px;
+    }
 
-        /* Video Modal */
-        .video-modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80%;
-            max-width: 1100px;
-            background-color: #121212;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
+    .section h2 {
+      font-size: 26px;
+      margin-bottom: 20px;
+    }
 
-        .video-modal.show {
-            display: block;
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-        }
+    .movie-grid {
+      display: flex;
+      overflow-x: scroll;
+      gap: 20px;
+      padding: 10px;
+    }
 
-        .video-modal iframe {
-            width: 100%;
-            height: 600px;
-            border-radius: 12px;
-        }
+    .movie-card {
+      position: relative;
+      width: 220px;
+      height: 350px;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-        /* Close Button */
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            padding: 10px;
-            background-color: #ff5252;
-            border: none;
-            color: white;
-            font-size: 22px;
-            cursor: pointer;
-            border-radius: 50%;
-            transition: background-color 0.3s ease;
-        }
+    .movie-card img {
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+      object-fit: cover;
+    }
 
-        .close-btn:hover {
-            background-color: #ff6f6f;
-        }
+    .movie-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.8);
+    }
 
-        /* Overlay Background */
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            z-index: 999;
-        }
+    /* Movie Info Popup on Hover */
+    .movie-card .movie-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      border-radius: 0 0 8px 8px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
 
-        .overlay.show {
-            display: block;
-        }
+    .movie-card:hover .movie-info {
+      opacity: 1;
+    }
 
-        /* Hover Animation on Play Button */
-        .play-btn:hover {
-            background-color: #ff6f6f;
-            transform: scale(1.1);
-        }
+    .movie-info h3 {
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 60px;
-            }
+    .movie-info p {
+      font-size: 14px;
+    }
 
-            .movie-container {
-                width: 100%;
-                padding: 0 15px;
-            }
+    /* Modal for Trailer */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+    }
 
-            .movie-box {
-                max-width: 100%;
-            }
+    .modal.active {
+      display: flex;
+    }
 
-            .description {
-                font-size: 16px;
-            }
+    .modal-content {
+      width: 80%;
+      max-width: 800px;
+      background-color: #222;
+      padding: 20px;
+      position: relative;
+    }
 
-            .play-btn {
-                font-size: 22px;
-                padding: 12px 25px;
-            }
-        }
-    </style>
+    .modal-content iframe {
+      width: 100%;
+      height: 450px;
+      border-radius: 8px;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: #fff;
+      font-size: 30px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+  </style>
 </head>
 <body>
 
-    <!-- Overlay for Video Modal -->
-    <div class="overlay" id="overlay" onclick="closeModal()"></div>
-
-    <!-- Header -->
-    <header>
-        <h1>Sival</h1>
-    </header>
-
-    <!-- Movie Section -->
-    <div class="movie-container">
-        <!-- Movie Rectangles -->
-        <div class="movie-box" onclick="openModal('https://www.youtube.com/watch?v=IeFWNtMo1Fs')">
-            <img src="https://www.garfield-film.ch/_media/cba6d9fa5d/sony/ba1084/artwork-en.jpg" alt="Movie Thumbnail">
-            <h2>Movie 1 - The garfield movie</h2>
-        </div>
-
-        <div class="movie-box" onclick="openModal('https://www.youtube.com/watch?v=dQw4w9WgXcQ')">
-            <img src="https://via.placeholder.com/50" alt="Movie Thumbnail">
-            <h2>Movie 2 - Epic Journey</h2>
-        </div>
-
-        <div class="movie-box" onclick="openModal('https://www.youtube.com/watch?v=dQw4w9WgXcQ')">
-            <img src="https://via.placeholder.com/50" alt="Movie Thumbnail">
-            <h2>Movie 3 - Dark Secrets</h2>
-        </div>
-
-        <!-- Description Box -->
-        <div class="description">
-            <p>Garfield s'apprête à vivre une aventure sauvage en plein air. Après des retrouvailles inattendues avec son père disparu depuis longtemps - le chat Vic - Garfield et Odie sont contraints d'abandonner leur vie choyée pour rejoindre Vic.</p>
-        </div>
-
-        <!-- Play Button -->
-        <button class="play-btn" onclick="openModal('https://drive.google.com/file/d/1ApwtxNupjkD4QNDNh_v42HX10Ok42s_B/preview')">Watch Now</button>
+  <!-- Header -->
+  <header class="header">
+    <h1>StreamHub</h1>
+    <div class="search-bar">
+      <input type="text" placeholder="Search movies or shows">
     </div>
+  </header>
 
-    <!-- Video Modal -->
-    <div class="video-modal" id="video-modal">
-        <button class="close-btn" onclick="closeModal()">X</button>
-        <iframe id="video-frame" src="" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h2>Featured Movie</h2>
+      <p>Explore the blockbuster hit of the season. Watch it now on StreamHub.</p>
+      <div class="hero-buttons">
+        <a href="#">Watch Now</a>
+        <a href="#">Trailer</a>
+      </div>
     </div>
+  </section>
 
-    <script>
-        function openModal(videoURL) {
-            document.getElementById("overlay").classList.add("show");
-            document.getElementById("video-modal").classList.add("show");
-            document.getElementById("video-frame").src = videoURL;
-        }
+  <!-- Movie Grid -->
+  <section class="section">
+    <h2>Trending Now</h2>
+    <div class="movie-grid">
+      <!-- Movie Card -->
+      <div class="movie-card" onclick="showModal('Garfield : Héros malgré lui?', 'https://drive.google.com/file/d/1ApwtxNupjkD4QNDNh_v42HX10Ok42s_B/view?usp=sharing')">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/Amazon_Prime_Video_logo.svg" alt="Terrifier 3">
+        <div class="movie-info">
+          <h3>Garfield : Héros malgré lui?</h3>
+          <p>Animation, Comédie, Famille</p>
+        </div>
+      </div>
 
-        function closeModal() {
-            document.getElementById("overlay").classList.remove("show");
-            document.getElementById("video-modal").classList.remove("show");
-            document.getElementById("video-frame").src = "";
-        }
-    </script>
+      <!-- More Movie Cards (Repeat as needed) -->
+    </div>
+  </section>
 
+  <!-- Modal for Trailer -->
+  <div class="modal" id="movie-modal">
+    <div class="modal-content">
+      <button class="close-modal" onclick="closeModal()">✖</button>
+      <h2 id="modal-title">Movie Title</h2>
+      <iframe id="modal-iframe" src="" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <script>
+    function showModal(title, fileId) {
+      const modal = document.getElementById('movie-modal');
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-iframe').src = `https://drive.google.com/uc?export=download&id=${fileId}`;
+      modal.classList.add('active');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('movie-modal');
+      modal.classList.remove('active');
+    }
+  </script>
 </body>
 </html>
