@@ -19,6 +19,7 @@
             background-image: url('https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/f562aaf4-5dbb-4603-a32b-6ef6c2230136/dh0w8qv-9d8ee6b2-b41a-4681-ab9b-8a227560dc75.jpg/v1/fill/w_1192,h_670,q_70,strp/the_netflix_login_background__canada__2024___by_logofeveryt_dh0w8qv-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NzIwIiwicGF0aCI6IlwvZlwvZjU2MmFhZjQtNWRiYi00NjAzLWEzMmItNmVmNmMyMjMwMTM2XC9kaDB3OHF2LTlkOGVlNmIyLWI0MWEtNDY4MS1hYjliLThhMjI3NTYwZGM3NS5qcGciLCJ3aWR0aCI6Ijw9MTI4MCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.LOYKSxIDqfPwWHR0SSJ-ugGQ6bECF0yO6Cmc0F26CQs');
             background-size: cover;
             background-position: center;
+            background-attachment: fixed;
         }
         header {
             background-color: rgba(0, 0, 0, 0.7);
@@ -44,6 +45,7 @@
             display: flex;
             justify-content: center;
             gap: 40px;
+            transition: background-color 0.3s ease;
         }
         nav a {
             color: #fff;
@@ -53,21 +55,6 @@
         }
         nav a:hover {
             color: #e50914;
-        }
-        .search-bar {
-            width: 80%;
-            margin: 20px auto;
-            padding: 10px;
-            border-radius: 5px;
-            border: none;
-            background-color: #333;
-            color: white;
-            font-size: 18px;
-            outline: none;
-            transition: background-color 0.3s;
-        }
-        .search-bar:focus {
-            background-color: #444;
         }
         .movie-box {
             background-color: #333;
@@ -79,18 +66,18 @@
             text-align: center;
             width: 250px;
             cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
         .movie-box:hover {
             transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
         }
         .movie-box img {
             width: 100%;
             height: 180px;
             object-fit: cover;
             border-radius: 10px;
-            transition: border-radius 0.3s ease;
+            transition: border-radius 0.2s ease;
         }
         .movie-box img:hover {
             border-radius: 12px;
@@ -192,25 +179,10 @@
             gap: 20px;
             flex-wrap: wrap;
         }
-        .load-more-btn {
-            background-color: #e50914;
-            color: white;
-            padding: 12px 25px;
-            text-decoration: none;
-            border-radius: 30px;
-            font-size: 16px;
-            display: block;
-            width: max-content;
-            margin-top: 20px;
-            text-align: center;
-            margin-left: auto;
-            margin-right: auto;
-            text-transform: uppercase;
-            font-weight: 500;
-            transition: background-color 0.3s ease;
-        }
-        .load-more-btn:hover {
-            background-color: #f40612;
+        @media (max-width: 768px) {
+            .category .content {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -227,16 +199,12 @@
         <a href="#genres">Genres</a>
     </nav>
 
-    <!-- Search Bar -->
-    <input type="text" class="search-bar" placeholder="Search movies and TV shows..." id="searchBar">
-
     <!-- Movie Categories -->
     <section id="movies" class="category">
         <h3>Popular Movies</h3>
         <div class="content" id="movieList">
             <!-- Movie Boxes dynamically added here -->
         </div>
-        <a href="javascript:void(0)" class="load-more-btn" onclick="loadMoreMovies()">Load More</a>
     </section>
 
     <!-- Modal for Movie Details -->
@@ -266,30 +234,29 @@
             document.getElementById("movieTrailer").src = ""; // Stop video on close
         }
 
-        function loadMoreMovies() {
-            const moreMovies = [
-                { title: 'New Movie 1', description: 'Description for new movie 1', thumbnail: 'thumbnail_url', trailerUrl: 'trailer_url', watchNowUrl: 'watch_url' },
-                { title: 'New Movie 2', description: 'Description for new movie 2', thumbnail: 'thumbnail_url', trailerUrl: 'trailer_url', watchNowUrl: 'watch_url' }
-            ];
+        // Dynamically added movies
+        const movies = [
+            { title: 'Garfield: Héros malgré lui', description: 'Garfield, the famous indoor cat, embarks on an adventurous heist with his father and dog.', thumbnail: 'https://fr.web.img6.acsta.net/c_310_420/img/a8/48/a848eac086dc48b8b44caefdb9bdde3c.jpg', trailerUrl: 'https://www.garfield.movie/video/trailer2.mp4', watchNowUrl: 'https://drive.google.com/file/d/1ApwtxNupjkD4QNDNh_v42HX10Ok42s_B/preview?usp=sharing' },
+            { title: 'Movie 2', description: 'Description for movie 2', thumbnail: 'thumbnail_url', trailerUrl: 'trailer_url', watchNowUrl: 'watch_url' }
+        ];
 
-            moreMovies.forEach(movie => {
-                const movieBox = document.createElement('div');
-                movieBox.classList.add('movie-box');
-                movieBox.setAttribute('onclick', `openModal('${movie.title}', '${movie.description}', '${movie.trailerUrl}', '${movie.watchNowUrl}')`);
+        movies.forEach(movie => {
+            const movieBox = document.createElement('div');
+            movieBox.classList.add('movie-box');
+            movieBox.setAttribute('onclick', `openModal('${movie.title}', '${movie.description}', '${movie.trailerUrl}', '${movie.watchNowUrl}')`);
 
-                const img = document.createElement('img');
-                img.src = movie.thumbnail;
-                img.alt = movie.title;
+            const img = document.createElement('img');
+            img.src = movie.thumbnail;
+            img.alt = movie.title;
 
-                const h4 = document.createElement('h4');
-                h4.innerText = movie.title;
+            const h4 = document.createElement('h4');
+            h4.innerText = movie.title;
 
-                movieBox.appendChild(img);
-                movieBox.appendChild(h4);
+            movieBox.appendChild(img);
+            movieBox.appendChild(h4);
 
-                document.getElementById('movieList').appendChild(movieBox);
-            });
-        }
+            document.getElementById('movieList').appendChild(movieBox);
+        });
     </script>
 </body>
 </html>
