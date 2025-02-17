@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StreamNow - Movies & TV Shows</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -11,57 +12,105 @@
             box-sizing: border-box;
         }
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #141414;
+            font-family: 'Open Sans', sans-serif;
+            background: #141414;
+            background-image: radial-gradient(farthest-corner at 40% 40%, rgba(40, 40, 40, 0.9) 0%, rgba(20, 20, 20, 1) 80%);
             color: white;
             line-height: 1.6;
             overflow-x: hidden;
-            background-image: url('https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/f562aaf4-5dbb-4603-a32b-6ef6c2230136/dh0w8qv-9d8ee6b2-b41a-4681-ab9b-8a227560dc75.jpg/v1/fill/w_1192,h_670,q_70,strp/the_netflix_login_background__canada__2024___by_logofeveryt_dh0w8qv-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NzIwIiwicGF0aCI6IlwvZlwvZjU2MmFhZjQtNWRiYi00NjAzLWEzMmItNmVmNmMyMjMwMTM2XC9kaDB3OHF2LTlkOGVlNmIyLWI0MWEtNDY4MS1hYjliLThhMjI3NTYwZGM3NS5qcGciLCJ3aWR0aCI6Ijw9MTI4MCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.LOYKSxIDqfPwWHR0SSJ-ugGQ6bECF0yO6Cmc0F26CQs');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            min-height: 100vh;
         }
         header {
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+            background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.8) 100%);
+            padding: 16px 4%;
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 999;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
-        header h1 {
-            color: #e50914;
-            font-size: 48px;
-            font-weight: bold;
-            letter-spacing: 2px;
+        header.scrolled {
+            background: rgb(20, 20, 20);
         }
-        .movie-box {
-            background-color: #333;
-            margin: 20px;
-            padding: 20px;
-            border-radius: 12px;
+        .search-container {
+            margin-right: 50px;
+            position: relative;
+        }
+        .search-input {
+            padding: 8px 40px 8px 16px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.75);
+            color: white;
+            width: 260px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .search-input:focus {
+            width: 300px;
+            background: rgba(0, 0, 0, 0.9);
+            border-color: white;
+        }
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .search-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.3);
+        }
+        .movie-grid {
+            padding: 120px 40px 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .movie-card {
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        .movie-card:hover {
+            transform: scale(1.05);
+            z-index: 2;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+        }
+        .movie-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        .movie-card:hover img {
+            filter: brightness(1.2);
+        }
+        .movie-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 15px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 50%, transparent 100%);
+            opacity: 0;
+            transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
-            text-align: center;
-            width: 250px;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            gap: 10px;
         }
-        .movie-box:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        .movie-card:hover .movie-info {
+            opacity: 1;
         }
-        .movie-box img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 10px;
-            transition: border-radius 0.2s ease;
-        }
-        .movie-box img:hover {
-            border-radius: 12px;
+        .movie-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
         }
         .modal {
             display: none;
@@ -70,182 +119,334 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(0, 0, 0, 0.9);
             z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.3s ease;
+            backdrop-filter: blur(8px);
         }
         .modal-content {
-            background-color: rgba(0, 0, 0, 0.9);
-            padding: 30px;
-            border-radius: 15px;
             position: relative;
+            width: 90%;
+            max-width: 1000px;
+            margin: 50px auto;
+            background: rgba(24, 24, 24, 0.98);
+            padding: 30px;
+            border-radius: 8px;
+            color: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            min-height: 90vh;
+        }
+        .modal-header {
+            order: 1;
+        }
+        .modal-title {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .modal-description {
+            color: #999;
+            margin-bottom: 20px;
+        }
+        .modal iframe {
+            order: 2;
+            width: 100%;
+            height: 500px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .modal-buttons {
+            order: 3;
             display: flex;
             justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            width: 80%;
-            height: 85%;
-            color: white;
-            animation: fadeIn 0.5s ease-in;
-            overflow-y: auto;
+            gap: 15px;
+            margin-top: auto;
+            padding-top: 20px;
         }
-        .modal-content h2 {
-            margin-bottom: 10px;
-            font-size: 36px;
-            font-weight: bold;
+        .watch-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #e50914;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
-            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.6);
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            min-width: 150px;
         }
-        .modal-content p {
-            margin-bottom: 20px;
-            font-size: 18px;
-            text-align: left;
-            max-width: 600px;
-            line-height: 1.8;
-            letter-spacing: 0.5px;
+        .watch-button:hover {
+            background: #f40612;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(229, 9, 20, 0.7);
         }
-        .modal-content iframe {
-            width: 100%;
-            height: 400px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.8);
-        }
-        .buttons {
-            margin-top: 20px;
+        .modal-buttons {
             display: flex;
-            gap: 20px;
+            gap: 15px;
+            margin-top: 20px;
         }
-        .buttons a {
-            background-color: #e50914;
-            color: white;
-            padding: 12px 25px;
-            text-decoration: none;
-            border-radius: 30px;
-            font-size: 16px;
-            text-transform: uppercase;
-            font-weight: 500;
-            transition: background-color 0.3s ease;
+        .trailer-button {
+            background: rgba(255, 255, 255, 0.2);
         }
-        .buttons a:hover {
-            background-color: #f40612;
+        .trailer-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
         }
-        .close-btn {
+        .close-modal {
             position: absolute;
             top: 15px;
-            right: 25px;
-            font-size: 35px;
-            color: white;
+            right: 15px;
+            font-size: 24px;
+            color: #fff;
             cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-        .close-btn:hover {
-            transform: rotate(90deg);
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        .category {
-            padding: 40px 20px;
-            text-align: center;
-            margin-top: 100px; /* Added margin to move the thumbnails down */
-        }
-        .category h3 {
-            font-size: 36px;
-            margin-bottom: 20px;
-        }
-        .category .content {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
+            background: none;
+            border: none;
+            padding: 5px;
         }
         @media (max-width: 768px) {
-            .category .content {
-                flex-direction: column;
+            .movie-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                padding: 100px 20px 20px;
             }
+            .logo {
+                font-size: 36px;
+                margin-left: 20px;
+            }
+            .modal iframe {
+                height: 300px;
+            }
+        }
+        .logo {
+            color: #e50914;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 36px;
+            letter-spacing: 2px;
+            margin-left: 50px;
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>StreamNow</h1>
+    <header id="header">
+        <a href="#" class="logo">StreamNow</a>
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search movies..." id="searchInput">
+        </div>
     </header>
 
-    <!-- Movie Thumbnails -->
-    <section class="category">
-        <div class="content" id="movieList">
-            <!-- Movie Boxes dynamically added here -->
-        </div>
-    </section>
+    <div class="movie-grid" id="movieGrid"></div>
 
-    <!-- Modal for Movie Details -->
     <div id="movieModal" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h2 id="movieTitle"></h2>
-            <p id="movieDescription"></p>
-            <iframe id="movieTrailer" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-            <div class="buttons">
-                <a id="watchNowBtn" href="" target="_blank">Watch Now</a>
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+            <div class="modal-header">
+                <h2 id="modalTitle" class="modal-title"></h2>
+                <p id="modalDescription" class="modal-description"></p>
+            </div>
+            <iframe id="modalTrailer" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            <div class="modal-buttons" style="margin-top: 20px;">
+                <a id="watchButton" class="watch-button" target="_blank">Watch Now</a>
             </div>
         </div>
     </div>
 
     <script>
-        function openModal(title, description, trailerUrl, watchNowUrl) {
-            document.getElementById("movieTitle").innerText = title;
-            document.getElementById("movieDescription").innerText = description;
-            document.getElementById("movieTrailer").src = trailerUrl;
-            document.getElementById("watchNowBtn").href = watchNowUrl;
-            document.getElementById("movieModal").style.display = "flex";
+        const movies = [
+            {
+                title: "Garfield: Héros malgré lui",
+                description: "Le célèbre chat d'intérieur, amateur de lasagnes et qui déteste les lundis, est sur le point d'être embarqué dans une folle aventure.",
+                thumbnail: "https://fr.web.img6.acsta.net/c_310_420/img/a8/48/a848eac086dc48b8b44caefdb9bdde3c.jpg",
+                trailerUrl: "https://www.youtube.com/embed/cldTF5e8wpQ?autoplay=1",
+                watchUrl: "https://drive.google.com/file/d/1ApwtxNupjkD4QNDNh_v42HX10Ok42s_B/preview?usp=sharing"
+            },
+            {
+                title: "Avengers: Infinity War",
+                description: "Les Avengers et leurs alliés devront être prêts à tout sacrifier pour neutraliser le redoutable Thanos avant que son attaque éclair ne conduise à la destruction complète de l'univers.",
+                thumbnail: "https://fr.web.img3.acsta.net/c_310_420/pictures/18/03/16/14/42/0611719.jpg",
+                trailerUrl: "https://www.youtube.com/embed/eIWs2IUr3Vs?autoplay=1",
+                watchUrl: "https://drive.google.com/file/d/1a0TBDlqzkw9k0ZPH8axMRjr-0T1ogqA0/preview?usp=sharing"
+            },
+            {
+                title: "Avengers: Endgame",
+                description: "Thanos ayant anéanti la moitié de l'univers, les Avengers restants resserrent les rangs dans ce vingt-deuxième film des Studios Marvel.",
+                thumbnail: "https://fr.web.img6.acsta.net/c_310_420/pictures/19/04/04/09/04/0472053.jpg",
+                trailerUrl: "https://www.youtube.com/embed/wV-Q0o2OQjQ?autoplay=1",
+                watchUrl: "https://drive.google.com/file/d/12RuKFYLWarnjN9Hr65HPoEVZ4-EFBveL/preview?usp=sharing"
+            },
+            {
+                title: "Deadpool & Wolverine",
+                description: "Après avoir échoué à rejoindre l'équipe des Avengers, Wade Wilson passe d'un petit boulot à un autre sans vraiment trouver sa voie.",
+                thumbnail: "https://fr.web.img3.acsta.net/c_310_420/img/e4/cd/e4cd101f2e66f4e7818fcf53d05c006a.jpg",
+                trailerUrl: "https://www.youtube.com/embed/KT-8QL04x40?autoplay=1",
+                watchUrl: "https://drive.google.com/file/d/1vH1vyv-hJmflULxL6kBOB45QH0jpnKMN/preview?usp=sharing"
+            },
+            {
+                title: "Spider-Man: Across the Spider-Verse",
+                description: "Après avoir retrouvé Gwen Stacy, Spider-Man est catapulté à travers le Multivers, où il rencontre une équipe de Spider-Héros.",
+                thumbnail: "https://fr.web.img6.acsta.net/c_310_420/pictures/23/05/11/10/00/1986933.jpg",
+                trailerUrl: "https://www.youtube.com/embed/iZSRP2UYtO4?autoplay=1",
+                watchUrl: "https://drive.google.com/file/d/1_3f2Us77TF71N0Il1lRxa2qFddn4kGEt/preview?usp=sharing"
+            },
+            {
+                title: "Le Robot Sauvage",
+                description: "Une unité ROZZUM 7134 alias 'Roz' qui après avoir fait naufrage sur une île déserte doit apprendre à adapter à un environnement hostile.",
+                thumbnail: "https://fr.web.img3.acsta.net/c_310_420/img/7a/10/7a1098f21c765b7d4935240e1af094ed.jpg",
+                trailerUrl: "https://www.youtube.com/embed/3iHLk8nHX80?autoplay=1",
+                watchUrl: "https://drive.google.com/file/d/1xF2FVX4bxJvVYeWMqxoXy4uchKQAPdlq/preview?usp=sharing"
+            },
+            {
+                title: "Captain America: Civil War",
+                description: "Steve Rogers est désormais à la tête des Avengers, dont la mission est de protéger l'humanité.",
+                thumbnail: "https://fr.web.img3.acsta.net/c_310_420/pictures/16/03/11/09/46/182814.jpg",
+                trailerUrl: "https://www.youtube.com/embed/fuIIGDjEj8Q?autoplay=1",
+                watchUrl: "https://drive.google.com/file/d/1zccKDD5q7MtV5ZSAYGGXrCColMn8pkJt/preview?usp=sharing"
+            },
+            {
+                title: "Moi, Moche et Méchant 4",
+                description: "Gru et sa famille doivent fuir face à un nouvel ennemi, Maxime Le Mal.",
+                thumbnail: "https://fr.web.img5.acsta.net/c_310_420/img/cb/3d/cb3d42b81f3003e54a90fd77ddabaf14.jpg",
+                trailerUrl: "https://www.youtube.com/embed/2i776vPid38?autoplay=1",
+                watchUrl: "https://drive.google.com/file/d/1oX-12Waj_VRdmz7KV4AYKjLyOy3BkIBH/preview?usp=sharing"
+            },
+            {
+                title: "One Piece Film - Red",
+                description: "Luffy et son équipage assistent à un festival de musique où la chanteuse Uta va révéler sa puissance exceptionnelle.",
+                thumbnail: "https://fr.web.img2.acsta.net/c_310_420/pictures/22/06/08/13/18/5161934.jpg",
+                trailerUrl: "https://www.youtube.com/embed/XfkjE-NbYyA?autoplay=1",
+                watchUrl: "https://drive.google.com/file/d/1wNcFqC5jSVR9QLYnJ5pVzQXaJhGR2V3n/preview?usp=sharing"
+            },
+            {
+                title: "Sonic 2 le film",
+                description: "Sonic veut prouver qu'il a l'étoffe d'un véritable héros quand le Dr Robotnik refait son apparition.",
+                thumbnail: "https://fr.web.img3.acsta.net/c_310_420/pictures/22/03/14/15/39/4137538.jpg",
+                trailerUrl: "https://www.youtube.com/embed/AXuhIwEz1qI?autoplay=1",
+                watchUrl: "https://drive.google.com/file/d/1Mrd2aaTp8QyHX7nkrEKhoNxfARx2HCQl/preview?usp=sharing"
+            },
+            {
+                title: "Dragon Ball Super: Super Hero",
+                description: "L'armée du Ruban Rouge crée les cyborgs ultimes, Gamma 1 et Gamma 2, qui lancent une attaque contre Piccolo et Son Gohan.",
+                thumbnail: "https://www.glenat.com/sites/default/files/images/livres/couv/9782344059494-001-T.jpeg",
+                trailerUrl: "https://www.youtube.com/embed/oWMbSVLE-Fc?autoplay=1",
+                watchUrl: "https://drive.google.com/file/d/1GrOZ6ltpoT9MBI1RNCzhBBU1j5kcYvXw/preview?usp=sharing"
+            },
+            {
+                title: "Dragon Ball Super: Broly",
+                description: "Goku et Vegeta font face à un nouvel ennemi, le Super Saïyen Légendaire Broly.",
+                thumbnail: "https://fr.web.img6.acsta.net/c_310_420/pictures/19/02/22/16/14/0019120.jpg",
+                trailerUrl: "https://www.youtube.com/embed/PW8fyoQhJEE?autoplay=1",
+                watchUrl: "https://drive.google.com/file/d/1ToSruIUlqLcLYg1Y6mlOKrs1d9AtiXkl/preview?usp=sharing"
+            },
+            {
+                title: "Vice-Versa 2",
+                description: "Riley est désormais une adolescente, ce qui déclenche l'arrivée de nouvelles émotions au quartier général.",
+                thumbnail: "https://fr.web.img5.acsta.net/c_310_420/img/f5/4c/f54c3310f101fe8ae4bba9e566bca1b5.jpg",
+                trailerUrl: "https://www.youtube.com/embed/exg3nieXnqQ?autoplay=1",
+                watchUrl: "https://drive.google.com/file/d/1oeHSVN3PF1OUufyhMJv-jsXniuHufuNf/preview?usp=sharing"
+            },
+            {
+                title: "Vice Versa",
+                description: "Au Quartier Général de Riley, cinq Émotions veillent à son bonheur.",
+                thumbnail: "https://fr.web.img3.acsta.net/c_310_420/pictures/15/04/16/13/58/571071.jpg",
+                trailerUrl: "https://www.youtube.com/embed/J4_8jijwNs0?autoplay=1",
+                watchUrl: "https://drive.google.com/file/d/11xQZE9KdMrjBRL23gX4pv471hA-PKpr6/preview?usp=sharing"
+            },
+            {
+                title: "Venom: The Last Dance",
+                description: "Eddie et Venom sont en cavale, traqués par leurs semblables.",
+                thumbnail: "https://fr.web.img3.acsta.net/c_310_420/img/57/b3/57b356018fe053ff81efa47e79cfb780.jpg",
+                trailerUrl: "https://www.youtube.com/embed/TEg5kTBN22I?autoplay=1",
+                watchUrl: "https://drive.google.com/file/d/154gjfRB47ib83pO21LkHQmHPAepFc_I3/preview?usp=sharing"
+            },
+            {
+                title: "Spider-Man: No Way Home",
+                description: "Spider-Man est démasqué et demande l'aide de Doctor Strange, ce qui rend les enjeux encore plus dangereux.",
+                thumbnail: "https://fr.web.img2.acsta.net/c_310_420/pictures/21/11/16/10/01/4860598.jpg",
+                trailerUrl: "https://www.youtube.com/embed/4InqzlHb9zE?autoplay=1",
+                watchUrl: "https://drive.google.com/file/d/1UnMTOag0ZFW9Osu4XRYcfsV8qjPp-Yz8/preview?usp=sharing"
+            }
+        ];
+
+        function createMovieCard(movie) {
+            const card = document.createElement('div');
+            card.className = 'movie-card';
+            card.innerHTML = `
+                <img src="${movie.thumbnail}" alt="${movie.title}">
+                <div class="movie-info">
+                    <div class="movie-title">${movie.title}</div>
+                    <a href="${movie.watchUrl}" class="watch-button" onclick="event.stopPropagation()">Watch Now</a>
+                </div>
+            `;
+            card.onclick = () => openModal(movie);
+            return card;
+        }
+
+        function openModal(movie) {
+            document.getElementById('modalTitle').textContent = movie.title;
+            document.getElementById('modalDescription').textContent = movie.description;
+            const modalTrailer = document.getElementById('modalTrailer');
+            const trailerButton = document.getElementById('trailerButton');
+            const movieModal = document.getElementById('movieModal');
+            
+            if (modalTrailer) modalTrailer.src = movie.trailerUrl;
+            const watchButton = document.getElementById('watchButton');
+            if (watchButton) watchButton.href = movie.watchUrl;
+            if (movieModal) {
+                movieModal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            }
         }
 
         function closeModal() {
-            document.getElementById("movieModal").style.display = "none";
-            document.getElementById("movieTrailer").src = ""; // Stop video on close
+            const movieModal = document.getElementById('movieModal');
+            const modalTrailer = document.getElementById('modalTrailer');
+            
+            if (modalTrailer) modalTrailer.src = '';
+            if (movieModal) {
+                movieModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
         }
 
-        // Dynamically added movies
-        const movies = [
-            { title: 'Garfield: Héros malgré lui', description: 'Le célèbre chat d’intérieur, amateur de lasagnes et qui déteste les lundis, est sur le point d’être embarqué dans une folle aventure. Après avoir retrouvé son père disparu, Vic (Samuel L. Jackson), un chat des rues mal peigné mais protecteur, Garfield et son ami, le chien Odie, sont contraints de quitter leur vie paisible et confortable pour aider Vic à accomplir un cambriolage aussi risqué qu’hilarant.', thumbnail: 'https://fr.web.img6.acsta.net/c_310_420/img/a8/48/a848eac086dc48b8b44caefdb9bdde3c.jpg', trailerUrl: 'https://www.youtube.com/embed/cldTF5e8wpQ?autoplay=1', watchNowUrl: 'https://drive.google.com/file/d/1ApwtxNupjkD4QNDNh_v42HX10Ok42s_B/preview?usp=sharing' },
-            { title: 'Avengers : Infinity War', description: 'Les Avengers et leurs alliés devront être prêts à tout sacrifier pour neutraliser le redoutable Thanos avant que son attaque éclair ne conduise à la destruction complète de l’univers.', thumbnail: 'https://fr.web.img3.acsta.net/c_310_420/pictures/18/03/16/14/42/0611719.jpg', trailerUrl: 'https://www.youtube.com/embed/eIWs2IUr3Vs?autoplay=1', watchNowUrl: 'https://drive.google.com/file/d/1a0TBDlqzkw9k0ZPH8axMRjr-0T1ogqA0/preview?usp=sharing' },
-            { title: 'Avengers: Endgame', description: 'Thanos ayant anéanti la moitié de l’univers, les Avengers restants resserrent les rangs dans ce vingt-deuxième film des Studios Marvel, grande conclusion d’un des chapitres de l’Univers Cinématographique Marvel.', thumbnail: 'https://fr.web.img6.acsta.net/c_310_420/pictures/19/04/04/09/04/0472053.jpg', trailerUrl: 'https://www.youtube.com/embed/wV-Q0o2OQjQ?autoplay=1', watchNowUrl: 'https://drive.google.com/file/d/12RuKFYLWarnjN9Hr65HPoEVZ4-EFBveL/preview?usp=sharing' },
-            { title: 'Deadpool & Wolverine', description: 'Après avoir échoué à rejoindre l’équipe des Avengers, Wade Wilson passe d’un petit boulot à un autre sans vraiment trouver sa voie. Jusqu’au jour où un haut gradé du Tribunal des Variations Anachroniques lui propose une mission digne de lui… à condition de voir son monde et tous ceux qu’il aime être anéantis. ', thumbnail: 'https://fr.web.img3.acsta.net/c_310_420/img/e4/cd/e4cd101f2e66f4e7818fcf53d05c006a.jpg', trailerUrl: 'https://www.youtube.com/embed/KT-8QL04x40?autoplay=1', watchNowUrl: 'https://drive.google.com/file/d/1vH1vyv-hJmflULxL6kBOB45QH0jpnKMN/preview?usp=sharing' },
-            { title: 'Spider-Man : Across the Spider-Verse', description: 'Après avoir retrouvé Gwen Stacy, Spider-Man, le sympathique héros originaire de Brooklyn, est catapulté à travers le Multivers, où il rencontre une équipe de Spider-Héros chargée de protéger son éxistance.', thumbnail: 'https://fr.web.img6.acsta.net/c_310_420/pictures/23/05/11/10/00/1986933.jpg', trailerUrl: 'https://www.youtube.com/embed/iZSRP2UYtO4?autoplay=1', watchNowUrl: 'https://drive.google.com/file/d/1_3f2Us77TF71N0Il1lRxa2qFddn4kGEt/preview?usp=sharing' },
-            { title: 'Le Robot Sauvage', description: 'une unité ROZZUM 7134 alias “Roz” – qui après avoir fait naufrage sur une île déserte doit apprendre à adapter à un environnement hostile en nouant petit à petit des relations avec les animaux .', thumbnail: 'https://fr.web.img3.acsta.net/c_310_420/img/7a/10/7a1098f21c765b7d4935240e1af094ed.jpg', trailerUrl: 'https://www.youtube.com/embed/3iHLk8nHX80?autoplay=1', watchNowUrl: 'https://drive.google.com/file/d/1xF2FVX4bxJvVYeWMqxoXy4uchKQAPdlq/preview?usp=sharing' },
-            { title: 'Captain America: Civil War', description: 'Steve Rogers est désormais à la tête des Avengers, dont la mission est de protéger l’humanité. À la suite d’une de leurs interventions qui a causé d’importants dégâts collatéraux, le gouvernement décide de mettre en place un organisme de commandement et de supervision.', thumbnail: 'https://fr.web.img3.acsta.net/c_310_420/pictures/16/03/11/09/46/182814.jpg', trailerUrl: 'https://www.youtube.com/embed/fuIIGDjEj8Q?autoplay=1', watchNowUrl: 'https://drive.google.com/file/d/1zccKDD5q7MtV5ZSAYGGXrCColMn8pkJt/preview?usp=sharing' },
-            { title: 'Moi, Moche et Méchant 4', description: 'Gru, Lucy et les filles, Margo, Edith et Agnès accueillent le petit dernier de la famille, Gru Junior, qui semble n’avoir qu’une passion : faire tourner son père en bourrique. Mais Gru est confronté à un nouvel ennemi Maxime Le Mal qui, avec l’aide de sa petite amie, la fatale Valentina, va obliger toute la famille à fuir.', thumbnail: 'https://fr.web.img5.acsta.net/c_310_420/img/cb/3d/cb3d42b81f3003e54a90fd77ddabaf14.jpg', trailerUrl: 'https://www.youtube.com/embed/2i776vPid38?autoplay=1', watchNowUrl: 'https://drive.google.com/file/d/1oX-12Waj_VRdmz7KV4AYKjLyOy3BkIBH/preview?usp=sharing' },
-            { title: 'One Piece Film - Red', description: 'Luffy et son équipage s’apprêtent à assister à un festival de musique attendu avec impatience. La chanteuse la plus populaire du monde, Uta, va monter sur scène pour la première fois. Celle qui n’est autre que la fille du légendaire pirate Shanks Le Roux va révéler la puissance exceptionnelle de sa voix qui pourrait bien changer le monde…', thumbnail: 'https://fr.web.img2.acsta.net/c_310_420/pictures/22/06/08/13/18/5161934.jpg', trailerUrl: 'https://www.youtube.com/embed/XfkjE-NbYyA?autoplay=1', watchNowUrl: 'https://drive.google.com/file/d/1wNcFqC5jSVR9QLYnJ5pVzQXaJhGR2V3n/preview?usp=sharing' },
-            { title: 'Sonic 2 le film', description: 'Bien installé dans la petite ville de Green Hills, Sonic veut maintenant prouver qu’il a l’étoffe d’un véritable héros. Un défi de taille se présente à lui quand le Dr Robotnik refait son apparition.', thumbnail: 'https://fr.web.img3.acsta.net/c_310_420/pictures/22/03/14/15/39/4137538.jpg', trailerUrl: 'https://www.youtube.com/embed/AXuhIwEz1qI?autoplay=1', watchNowUrl: 'https://drive.google.com/file/d/1Mrd2aaTp8QyHX7nkrEKhoNxfARx2HCQl/preview?usp=sharing' },
-            { title: 'Dragon Ball Super: Super Hero', description: 'L’armée du Ruban Rouge avait été détruite par Son Goku, mais des individus ont décidé de la faire renaître. Ils ont ainsi créé les cyborgs ultimes, Gamma 1 et Gamma 2. Autoproclamés les « Super Héros », ils lancent une attaque contre Piccolo et Son Gohan.', thumbnail: 'https://www.glenat.com/sites/default/files/images/livres/couv/9782344059494-001-T.jpeg', trailerUrl: 'https://www.youtube.com/embed/oWMbSVLE-Fc?autoplay=1', watchNowUrl: 'https://drive.google.com/file/d/1GrOZ6ltpoT9MBI1RNCzhBBU1j5kcYvXw/preview?usp=sharing' },
-            { title: 'Dragon Ball Super: Broly', description: 'Goku et Vegeta font face à un nouvel ennemi, le Super Saïyen Légendaire Broly, dans un combat explosif pour sauver notre planète.', thumbnail: 'https://fr.web.img6.acsta.net/c_310_420/pictures/19/02/22/16/14/0019120.jpg', trailerUrl: 'https://www.youtube.com/embed/PW8fyoQhJEE?autoplay=1', watchNowUrl: 'https://drive.google.com/file/d/1ToSruIUlqLcLYg1Y6mlOKrs1d9AtiXkl/preview?usp=sharing' },
-            { title: 'Vice-Versa 2', description: 'Fraichement diplômée, Riley est désormais une adolescente, ce qui n’est pas sans déclencher un chamboulement majeur au sein du quartier général qui doit faire face à quelque chose d’inattendu : l’arrivée de nouvelles émotions ! Joie, Tristesse, Colère, Peur et Dégoût - qui ont longtemps fonctionné avec succès - ne savent pas trop comment réagir lorsqu’Anxiété débarque. Et il semble qu’elle ne soit pas la seule...', thumbnail: 'https://fr.web.img5.acsta.net/c_310_420/img/f5/4c/f54c3310f101fe8ae4bba9e566bca1b5.jpg', trailerUrl: 'https://www.youtube.com/embed/exg3nieXnqQ?autoplay=1', watchNowUrl: 'https://drive.google.com/file/d/1oeHSVN3PF1OUufyhMJv-jsXniuHufuNf/preview?usp=sharing' },
-            { title: 'Vice Versa', description: 'Au Quartier Général, le centre de contrôle situé dans la tête de la petite Riley, 11 ans, cinq Émotions sont au travail. À leur tête, Joie, débordante d’optimisme et de bonne humeur, veille à ce que Riley soit heureuse. Peur se charge de la sécurité,  Colère s’assure que la justice règne, et Dégoût empêche Riley de se faire empoisonner la vie – au sens propre comme au figuré. Quant à Tristesse, elle n’est pas très sûre de son rôle.', thumbnail: 'https://fr.web.img3.acsta.net/c_310_420/pictures/15/04/16/13/58/571071.jpg', trailerUrl: 'https://www.youtube.com/embed/J4_8jijwNs0?autoplay=1', watchNowUrl: 'https://drive.google.com/file/d/11xQZE9KdMrjBRL23gX4pv471hA-PKpr6/preview?usp=sharing' },
-            { title: 'Venom: The Last Dance', description: 'Eddie et Venom sont en cavale. Chacun est traqué par ses semblables et alors que l’étau se resserre, le duo doit prendre une décision dévastatrice qui annonce la conclusion des aventures d’Eddie et de Venom.', thumbnail: 'https://fr.web.img3.acsta.net/c_310_420/img/57/b3/57b356018fe053ff81efa47e79cfb780.jpg', trailerUrl: 'https://www.youtube.com/embed/TEg5kTBN22I?autoplay=1', watchNowUrl: 'https://drive.google.com/file/d/154gjfRB47ib83pO21LkHQmHPAepFc_I3/preview?usp=sharing' },
-            { title: 'Spider-Man: No Way Home', description: 'Pour la première fois dans son histoire cinématographique, Spider-Man, le héros sympa du quartier est démasqué et ne peut désormais plus séparer sa vie normale de ses lourdes responsabilités de super-héros. Quand il demande de l’aide à Doctor Strange, les enjeux deviennent encore plus dangereux, le forçant à découvrir ce qu’être Spider-Man signifie véritablement.', thumbnail: 'https://fr.web.img2.acsta.net/c_310_420/pictures/21/11/16/10/01/4860598.jpg', trailerUrl: 'https://www.youtube.com/embed/4InqzlHb9zE?autoplay=1', watchNowUrl: 'https://drive.google.com/file/d/1UnMTOag0ZFW9Osu4XRYcfsV8qjPp-Yz8/preview?usp=sharing' },
-];        
-        movies.forEach(movie => {
-            const movieBox = document.createElement('div');
-            movieBox.classList.add('movie-box');
-            movieBox.setAttribute('onclick', `openModal('${movie.title}', '${movie.description}', '${movie.trailerUrl}', '${movie.watchNowUrl}')`);
+        window.onclick = function(event) {
+            if (event.target === document.getElementById('movieModal')) {
+                closeModal();
+            }
+        };
 
-            const img = document.createElement('img');
-            img.src = movie.thumbnail;
-            img.alt = movie.title;
-
-            const h4 = document.createElement('h4');
-            h4.innerText = movie.title;
-
-            movieBox.appendChild(img);
-            movieBox.appendChild(h4);
-
-            document.getElementById('movieList').appendChild(movieBox);
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            header.classList.toggle('scrolled', window.scrollY > 50);
         });
+
+        function filterMovies(searchTerm) {
+            const filtered = movies.filter(movie => 
+                movie.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                movie.description.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            renderMovies(filtered);
+        }
+
+        function renderMovies(moviesToRender) {
+            const movieGrid = document.getElementById('movieGrid');
+            movieGrid.innerHTML = '';
+            moviesToRender.forEach(movie => {
+                movieGrid.appendChild(createMovieCard(movie));
+            });
+        }
+
+        // Add search functionality
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            filterMovies(e.target.value);
+        });
+
+        // Initial render
+        renderMovies(movies);
     </script>
 </body>
 </html>
