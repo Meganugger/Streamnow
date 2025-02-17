@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StreamNow - Movies & TV Shows</title>
+    <title>StreamNow - Movies & Series</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -230,17 +230,72 @@
             margin-left: 50px;
             text-decoration: none;
         }
+        .nav-tabs {
+            display: flex;
+            gap: 20px;
+            margin-left: 30px;
+        }
+        .nav-tab {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 5px 10px;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .nav-tab.active {
+            border-bottom-color: #e50914;
+        }
+        .episodes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .episode-card {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 4px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .episode-card:hover {
+            transform: scale(1.05);
+        }
+        .episode-thumbnail {
+            width: 100%;
+            height: 169px;
+            object-fit: cover;
+        }
+        .episode-info {
+            padding: 15px;
+        }
+        .episode-title {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        .episode-description {
+            font-size: 14px;
+            color: #999;
+        }
+
     </style>
 </head>
 <body>
     <header id="header">
         <a href="#" class="logo">StreamNow</a>
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="switchTab('movies', event)">Movies</div>
+            <div class="nav-tab" onclick="switchTab('series', event)">Series</div>
+        </div>
         <div class="search-container">
-            <input type="text" class="search-input" placeholder="Search movies..." id="searchInput">
+            <input type="text" class="search-input" placeholder="Search..." id="searchInput">
         </div>
     </header>
 
-    <div class="movie-grid" id="movieGrid"></div>
+    <div class="movie-grid" id="moviesGrid"></div>
+    <div class="movie-grid" id="seriesGrid" style="display: none;"></div>
 
     <div id="movieModal" class="modal">
         <div class="modal-content">
@@ -250,7 +305,8 @@
                 <p id="modalDescription" class="modal-description"></p>
             </div>
             <iframe id="modalTrailer" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-            <div class="modal-buttons" style="margin-top: 20px;">
+            <div id="episodesList" class="episodes-grid" style="display: none;"></div>
+            <div class="modal-buttons">
                 <a id="watchButton" class="watch-button" target="_blank">Watch Now</a>
             </div>
         </div>
@@ -386,6 +442,96 @@
              }
         ];
 
+        const series = [
+            {
+                title: "Squid Game - Season 1",
+                description: "Hundreds of cash-strapped players accept a strange invitation to compete in children's games. Inside, a tempting prize awaits — with deadly high stakes.",
+                thumbnail: "https://fr.web.img4.acsta.net/pictures/21/09/14/09/59/0721288.jpg",
+                trailerUrl: "https://www.youtube.com/embed/oqxAJKy0ii4?autoplay=1",
+                episodes: [
+                    {
+                        title: "Episode 1 - Red Light, Green Light",
+                        description: "Hoping to win easy money, a desperate Gi-hun agrees to take part in an enigmatic game. Not long into the first round, unforeseen horrors unfold.",
+                        thumbnail: "https://m.media-amazon.com/images/M/MV5BZDdjOWMwNTQtZmYwNS00ZjFkLWE2Y2EtNjZjNzQxYjZjMTUyXkEyXkFqcGdeQXVyMTEzMTI1Mjk3._V1_.jpg",
+                        watchUrl: "https://drive.google.com/file/d/your-episode-1-id/preview"
+                    },
+                    {
+                        title: "Episode 2 - Hell",
+                        description: "Split on whether to continue or quit, the group holds a vote. But their realities in the outside world may prove to be just as unforgiving.",
+                        thumbnail: "https://m.media-amazon.com/images/M/MV5BOGE5MmM0ZjItYzNjNC00M2Q1LTk4NTQtZjc0MjgwMzU3ZDY3XkEyXkFqcGdeQXVyMTEzMTI1Mjk3._V1_.jpg",
+                        watchUrl: "https://drive.google.com/file/d/your-episode-2-id/preview"
+                    },
+                    {
+                        title: "Episode 3 - The Man with the Umbrella",
+                        description: "A few players enter the next round with hidden advantages. But how far will each person go to survive? The third game challenges each player's trust.",
+                        thumbnail: "https://m.media-amazon.com/images/M/MV5BMWRhNGY3NGQtMDAxMS00YjY2LTgzOTUtZjljZmUyYWQwMGI2XkEyXkFqcGdeQXVyMTEzMTI1Mjk3._V1_.jpg",
+                        watchUrl: "https://drive.google.com/file/d/your-episode-3-id/preview"
+                    },
+                    {
+                        title: "Episode 4 - Stick to the Team",
+                        description: "As alliances form among the players, no one is safe in the dorm after lights-out. The third game brings more desperation — and more deaths.",
+                        thumbnail: "https://m.media-amazon.com/images/M/MV5BOTQyZTNkMDMtNGVmZi00YzY1LTg3NjQtMWE0NDM4MTM5NzBhXkEyXkFqcGdeQXVyMTEzMTI1Mjk3._V1_.jpg",
+                        watchUrl: "https://drive.google.com/file/d/your-episode-4-id/preview"
+                    },
+                    {
+                        title: "Episode 5 - A Fair World",
+                        description: "Players pair off for the fourth game. Gi-hun grapples with a moral dilemma, Sang-woo chooses self-preservation and Sae-byeok shares her untold story.",
+                        thumbnail: "https://m.media-amazon.com/images/M/MV5BYzRhOGY5MGItZjQwMy00ZDVhLTlmYzQtZDk0ZDhhOTk3Yjk3XkEyXkFqcGdeQXVyMTEzMTI1Mjk3._V1_.jpg",
+                        watchUrl: "https://drive.google.com/file/d/your-episode-5-id/preview"
+                    },
+                    {
+                        title: "Episode 6 - Gganbu",
+                        description: "The players form teams for the next game. But things take a turn as alliances break down and secrets come to light.",
+                        thumbnail: "https://m.media-amazon.com/images/M/MV5BYTNhZGY5NmYtZjZjMS00MWI4LTkyZjAtMDk0YmM0NGY5YWRiXkEyXkFqcGdeQXVyMTEzMTI1Mjk3._V1_.jpg",
+                        watchUrl: "https://drive.google.com/file/d/your-episode-6-id/preview"
+                    },
+                    {
+                        title: "Episode 7 - VIPS",
+                        description: "The VIPs arrive to watch the show. Special guests enter the game late, and the players face a glass bridge challenge with deadly consequences.",
+                        thumbnail: "https://m.media-amazon.com/images/M/MV5BYTNhNGU5YjQtZmRjZS00MWI4LTkyZjAtMDk0YmM0NGY5YWRiXkEyXkFqcGdeQXVyMTEzMTI1Mjk3._V1_.jpg",
+                        watchUrl: "https://drive.google.com/file/d/your-episode-7-id/preview"
+                    },
+                    {
+                        title: "Episode 8 - Front Man",
+                        description: "A player's family encounters mounting losses. The game's creator steps up to host the VIPs, while one detective goes rogue to chase a theory.",
+                        thumbnail: "https://m.media-amazon.com/images/M/MV5BYTNhNGU5YjQtZmRjZS00MWI4LTkyZjAtMDk0YmM0NGY5YWRiXkEyXkFqcGdeQXVyMTEzMTI1Mjk3._V1_.jpg",
+                        watchUrl: "https://drive.google.com/file/d/your-episode-8-id/preview"
+                    },
+                    {
+                        title: "Episode 9 - One Lucky Day",
+                        description: "The final round presents the ultimate test of loyalty. History is made — and the truth about the game's origins is finally revealed.",
+                        thumbnail: "https://m.media-amazon.com/images/M/MV5BYTNhNGU5YjQtZmRjZS00MWI4LTkyZjAtMDk0YmM0NGY5YWRiXkEyXkFqcGdeQXVyMTEzMTI1Mjk3._V1_.jpg",
+                        watchUrl: "https://drive.google.com/file/d/your-episode-9-id/preview"
+                    }
+                ]
+            }
+        ];
+
+        let currentContent = 'movies';
+
+        function switchTab(tab, event) {
+            const moviesGrid = document.getElementById('moviesGrid');
+            const seriesGrid = document.getElementById('seriesGrid');
+            const tabs = document.querySelectorAll('.nav-tab');
+
+            tabs.forEach(t => t.classList.remove('active'));
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+
+            if (tab === 'movies') {
+                moviesGrid.style.display = 'grid';
+                seriesGrid.style.display = 'none';
+                currentContent = 'movies';
+                renderMovies(movies);
+            } else {
+                moviesGrid.style.display = 'none';
+                seriesGrid.style.display = 'grid';
+                currentContent = 'series';
+                renderSeries(series);
+            }
+        }
+
         function createMovieCard(movie) {
             const card = document.createElement('div');
             card.className = 'movie-card';
@@ -400,13 +546,65 @@
             return card;
         }
 
+        function createSeriesCard(series) {
+            const card = document.createElement('div');
+            card.className = 'movie-card';
+            card.innerHTML = `
+                <img src="${series.thumbnail}" alt="${series.title}">
+                <div class="movie-info">
+                    <div class="movie-title">${series.title}</div>
+                    <button class="watch-button" onclick="openSeriesModal(${JSON.stringify(JSON.stringify(series))})">Episodes</button>
+                </div>
+            `;
+            return card;
+        }
+
+        function createEpisodeCard(episode) {
+            return `
+                <div class="episode-card" onclick="playEpisode('${episode.watchUrl}')">
+                    <img src="${episode.thumbnail}" class="episode-thumbnail" alt="${episode.title}">
+                    <div class="episode-info">
+                        <div class="episode-title">${episode.title}</div>
+                        <div class="episode-description">${episode.description}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function openSeriesModal(seriesJson) {
+            const series = JSON.parse(seriesJson);
+            const modalTitle = document.getElementById('modalTitle');
+            const modalDescription = document.getElementById('modalDescription');
+            const modalTrailer = document.getElementById('modalTrailer');
+            const episodesList = document.getElementById('episodesList');
+            const watchButton = document.getElementById('watchButton');
+            const movieModal = document.getElementById('movieModal');
+
+            modalTitle.textContent = series.title;
+            modalDescription.textContent = series.description;
+            modalTrailer.src = series.trailerUrl;
+
+            episodesList.innerHTML = series.episodes.map(ep => createEpisodeCard(ep)).join('');
+            episodesList.style.display = 'grid';
+            watchButton.style.display = 'none';
+
+            movieModal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+
+        function playEpisode(watchUrl) {
+            window.open(watchUrl, '_blank');
+        }
+
         function openModal(movie) {
             document.getElementById('modalTitle').textContent = movie.title;
             document.getElementById('modalDescription').textContent = movie.description;
             const modalTrailer = document.getElementById('modalTrailer');
             const trailerButton = document.getElementById('trailerButton');
             const movieModal = document.getElementById('movieModal');
-            
+            const episodesList = document.getElementById('episodesList');
+
             if (modalTrailer) modalTrailer.src = movie.trailerUrl;
             const watchButton = document.getElementById('watchButton');
             if (watchButton) watchButton.href = movie.watchUrl;
@@ -414,17 +612,22 @@
                 movieModal.style.display = 'block';
                 document.body.style.overflow = 'hidden';
             }
+            episodesList.style.display = 'none';
+            watchButton.style.display = 'inline-flex';
         }
 
         function closeModal() {
             const movieModal = document.getElementById('movieModal');
             const modalTrailer = document.getElementById('modalTrailer');
-            
+            const episodesList = document.getElementById('episodesList');
+
             if (modalTrailer) modalTrailer.src = '';
             if (movieModal) {
                 movieModal.style.display = 'none';
                 document.body.style.overflow = 'auto';
             }
+            episodesList.style.display = 'none';
+            document.getElementById('watchButton').style.display = 'inline-flex';
         }
 
         window.onclick = function(event) {
@@ -438,25 +641,40 @@
             header.classList.toggle('scrolled', window.scrollY > 50);
         });
 
-        function filterMovies(searchTerm) {
-            const filtered = movies.filter(movie => 
-                movie.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                movie.description.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-            renderMovies(filtered);
+        function filterContent(searchTerm) {
+            if (currentContent === 'movies') {
+                const filtered = movies.filter(movie => 
+                    movie.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    movie.description.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+                renderMovies(filtered);
+            } else {
+                const filtered = series.filter(series => 
+                    series.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    series.description.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+                renderSeries(filtered);
+            }
         }
 
         function renderMovies(moviesToRender) {
-            const movieGrid = document.getElementById('movieGrid');
+            const movieGrid = document.getElementById('moviesGrid');
             movieGrid.innerHTML = '';
             moviesToRender.forEach(movie => {
                 movieGrid.appendChild(createMovieCard(movie));
             });
         }
 
-        // Add search functionality
+        function renderSeries(seriesToRender) {
+            const seriesGrid = document.getElementById('seriesGrid');
+            seriesGrid.innerHTML = '';
+            seriesToRender.forEach(series => {
+                seriesGrid.appendChild(createSeriesCard(series));
+            });
+        }
+
         document.getElementById('searchInput').addEventListener('input', (e) => {
-            filterMovies(e.target.value);
+            filterContent(e.target.value);
         });
 
         // Initial render
