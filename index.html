@@ -65,8 +65,10 @@
         .movie-grid {
             padding: 120px 40px 40px;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 30px;
+            max-width: 1800px;
+            margin: 0 auto;
         }
         .movie-card {
             position: relative;
@@ -125,20 +127,33 @@
         }
         .modal-content {
             position: relative;
-            width: 90%;
-            max-width: 1000px;
-            margin: 50px auto;
+            width: 98%;
+            max-width: 1800px;
+            margin: 10px auto;
             background: rgba(24, 24, 24, 0.98);
-            padding: 30px;
+            padding: 40px;
             border-radius: 8px;
             color: white;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             display: flex;
             flex-direction: column;
-            min-height: 90vh;
+            height: 98vh;
+            overflow-y: auto;
+        }
+        .modal-content iframe {
+            min-height: 700px;
+            margin-bottom: 30px;
         }
         .modal-header {
-            order: 1;
+            padding: 0 20px;
+            margin-bottom: 30px;
+        }
+        .modal iframe {
+            width: 100%;
+            height: calc(98vh - 180px);
+            margin-top: auto;
+            border-radius: 4px;
+            order: 3;
         }
         .modal-title {
             font-size: 32px;
@@ -250,8 +265,10 @@
         .episodes-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
+            gap: 30px;
             padding: 20px;
+            width: 100%;
+            margin-top: 20px;
         }
         .episode-card {
             background: rgba(0, 0, 0, 0.7);
@@ -553,9 +570,12 @@
                 <img src="${series.thumbnail}" alt="${series.title}">
                 <div class="movie-info">
                     <div class="movie-title">${series.title}</div>
-                    <button class="watch-button" onclick="openSeriesModal(${JSON.stringify(JSON.stringify(series))})">Episodes</button>
+                    <button class="watch-button">Episodes</button>
                 </div>
             `;
+            card.querySelector('.watch-button').addEventListener('click', () => {
+                openSeriesModal(series);
+            });
             return card;
         }
 
@@ -571,8 +591,7 @@
             `;
         }
 
-        function openSeriesModal(seriesJson) {
-            const series = JSON.parse(seriesJson);
+        function openSeriesModal(series) {
             const modalTitle = document.getElementById('modalTitle');
             const modalDescription = document.getElementById('modalDescription');
             const modalTrailer = document.getElementById('modalTrailer');
