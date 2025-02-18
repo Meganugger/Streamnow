@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StreamNow - Movies & Series</title>
+    <link rel="icon" type="image/png" href="StreamNow logo_1739890443094.png">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -244,6 +245,13 @@
             letter-spacing: 2px;
             margin-left: 50px;
             text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-logo {
+            width: 30px;
+            height: 30px;
         }
         .nav-tabs {
             display: flex;
@@ -301,7 +309,7 @@
 </head>
 <body>
     <header id="header">
-        <a href="#" class="logo">StreamNow</a>
+        <a href="#" class="logo"><img src="StreamNow logo_1739890443094.png" alt="StreamNow Logo" class="header-logo">StreamNow</a>
         <div class="nav-tabs">
             <div class="nav-tab active" onclick="switchTab('movies', event)">Movies</div>
             <div class="nav-tab" onclick="switchTab('series', event)">Series</div>
