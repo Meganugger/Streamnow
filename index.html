@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StreamNow - Movies & Series</title>
-    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/Meganugger/Streamnow/refs/heads/main/StreamNow%20logo.png">
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/Meganugger/Streamnow/main/StreamNow_logo-removebg-preview.png">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -250,8 +250,16 @@
             gap: 10px;
         }
         .header-logo {
-            width: 30px;
-            height: 30px;
+            width: 95px;
+            height: 95px;
+            margin-right: 20px;
+            margin-left: -30px;
+            padding: 10px;
+            object-fit: contain;
+        }
+        #header {
+            height: 70px;
+            overflow: hidden;
         }
         .nav-tabs {
             display: flex;
@@ -309,7 +317,7 @@
 </head>
 <body>
     <header id="header">
-        <a href="#" class="logo"><img src="StreamNow logo_1739890443094.png" alt="StreamNow Logo" class="header-logo">StreamNow</a>
+        <a href="#" class="logo"><img src="https://raw.githubusercontent.com/Meganugger/Streamnow/main/StreamNow_logo-removebg-preview.png" alt="StreamNow Logo" class="header-logo">StreamNow</a>
         <div class="nav-tabs">
             <div class="nav-tab active" onclick="switchTab('movies', event)">Movies</div>
             <div class="nav-tab" onclick="switchTab('series', event)">Series</div>
