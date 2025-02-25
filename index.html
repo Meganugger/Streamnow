@@ -643,7 +643,7 @@
                 <img src="${movie.thumbnail}" alt="${movie.title}">
                 <div class="movie-info">
                     <div class="movie-title">${movie.title}</div>
-                    <button class="watch-button" onclick="event.stopPropagation(); openPlayer('${encodeURIComponent(movie.watchUrl)}')">Watch Now</button>
+                    <a href="player.html?video=${encodeURIComponent(movie.watchUrl)}" class="watch-button" onclick="event.stopPropagation();" target="_blank">Watch Now</a>
                 </div>
             `;
             card.onclick = () => openModal(movie);
@@ -718,7 +718,10 @@ function openPlayer(videoUrl) {
 
             if (modalTrailer) modalTrailer.src = movie.trailerUrl;
             const watchButton = document.getElementById('watchButton');
-            if (watchButton) watchButton.href = movie.watchUrl;
+            if (watchButton) {
+                watchButton.href = `player.html?video=${encodeURIComponent(movie.watchUrl)}`;
+                watchButton.target = "_blank";
+            }
             if (movieModal) {
                 movieModal.style.display = 'block';
                 document.body.style.overflow = 'hidden';
