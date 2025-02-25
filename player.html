@@ -20,6 +20,11 @@
             height: 100vh;
             font-family: 'Google Sans', sans-serif;
             color: white;
+            cursor: default;
+        }
+
+        body.hide-cursor {
+            cursor: none;
         }
 
 
@@ -74,11 +79,11 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            opacity: 1;
+            opacity: 0;
             transition: opacity 0.3s;
         }
 
-        .video-container:hover .video-controls {
+        .video-container.active .video-controls {
             opacity: 1;
         }
 
@@ -361,6 +366,27 @@
                 fullscreenBtn.innerHTML = '<span class="material-icons">fullscreen_exit</span>';
             }
         };
+
+        // Auto-hide UI on mouse inactivity
+        let timeout;
+        const videoContainer = document.querySelector('.video-container');
+        
+        function showUI() {
+            document.body.classList.remove('hide-cursor');
+            videoContainer.classList.add('active');
+            clearTimeout(timeout);
+            timeout = setTimeout(hideUI, 3000); // Hide after 3 seconds of inactivity
+        }
+
+        function hideUI() {
+            if (!video.paused) {
+                document.body.classList.add('hide-cursor');
+                videoContainer.classList.remove('active');
+            }
+        }
+
+        document.addEventListener('mousemove', showUI);
+        videoContainer.addEventListener('click', showUI);
 
         // Keyboard controls for video navigation
         document.addEventListener('keydown', (e) => {
