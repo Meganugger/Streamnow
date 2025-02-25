@@ -26,7 +26,7 @@
 </head>
 <body>
     <div class="video-container">
-        <video width="800" height="450" controls autoplay>
+        <video width="800" height="450" controls>
             <source src="" type="video/mp4" id="videoSource">
         </video>
     </div>
@@ -35,8 +35,9 @@
             const urlParams = new URLSearchParams(window.location.search);
             const videoUrl = urlParams.get('video');
             if (videoUrl) {
-                document.querySelector('#videoSource').src = decodeURIComponent(videoUrl);
-                document.querySelector('video').load();
+                const video = document.querySelector('video');
+                video.innerHTML = `<source src="${decodeURIComponent(videoUrl)}" type="video/mp4">`;
+                video.load();
             }
         };
     </script>
