@@ -260,7 +260,9 @@
             if (videoUrl) {
                 // Handle Google Drive URLs by ensuring they use the correct format
                 if (videoUrl.includes('drive.google.com')) {
-                    if (videoUrl.includes('/view')) {
+                    if (videoUrl.includes('/download')) {
+                        videoUrl = videoUrl.replace('/download', '/preview');
+                    } else if (videoUrl.includes('/view')) {
                         videoUrl = videoUrl.replace('/view', '/preview');
                     }
                 }
