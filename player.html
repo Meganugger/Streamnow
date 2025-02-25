@@ -39,6 +39,10 @@
             max-height: 100vh;
             object-fit: contain;
             background: #000;
+            -webkit-filter: none !important;
+            filter: none !important;
+            -webkit-transform: none !important;
+            transform: none !important;
         }
 
         video::-webkit-media-controls {
@@ -46,13 +50,18 @@
         }
 
         video:fullscreen,
-        video::-webkit-full-screen {
+        video:-webkit-full-screen,
+        video:-moz-full-screen,
+        video:-ms-fullscreen {
             width: 100vw !important;
             height: 100vh !important;
             max-height: none !important;
             object-fit: contain !important;
             background: #000 !important;
+            -webkit-filter: none !important;
             filter: none !important;
+            -webkit-transform: none !important;
+            transform: none !important;
         }
 
         .video-controls {
@@ -263,16 +272,18 @@
             const urlParams = new URLSearchParams(window.location.search);
             let videoUrl = urlParams.get('video');
             if (videoUrl) {
-                // Handle Google Drive and Icedrive URLs
+                videoUrl = decodeURIComponent(videoUrl);
+                // Handle Google Drive URLs
                 if (videoUrl.includes('drive.google.com')) {
                     if (videoUrl.includes('/download')) {
                         videoUrl = videoUrl.replace('/download', '/preview');
                     } else if (videoUrl.includes('/view')) {
                         videoUrl = videoUrl.replace('/view', '/preview');
                     }
-                } else if (videoUrl.includes('icedrive.io')) {
-                    // Keep Icedrive URLs as they are - they work directly
-                    videoUrl = decodeURIComponent(videoUrl);
+                }
+                // For Icedrive, keep the download URL
+                if (videoUrl.includes('icedrive.io')) {
+                    videoUrl = videoUrl.includes('/view?') ? videoUrl.replace('/view?', '/download?') : videoUrl;
                 }
                 video.src = videoUrl;
             }
