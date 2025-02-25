@@ -39,15 +39,20 @@
             max-height: 100vh;
             object-fit: contain;
             background: #000;
-            filter: brightness(1) !important;
         }
 
         video::-webkit-media-controls {
             display: none !important;
         }
 
-        video:fullscreen {
-            filter: brightness(1) !important;
+        video:fullscreen,
+        video::-webkit-full-screen {
+            width: 100vw !important;
+            height: 100vh !important;
+            max-height: none !important;
+            object-fit: contain !important;
+            background: #000 !important;
+            filter: none !important;
         }
 
         .video-controls {
@@ -258,15 +263,18 @@
             const urlParams = new URLSearchParams(window.location.search);
             let videoUrl = urlParams.get('video');
             if (videoUrl) {
-                // Handle Google Drive URLs by ensuring they use the correct format
+                // Handle Google Drive and Icedrive URLs
                 if (videoUrl.includes('drive.google.com')) {
                     if (videoUrl.includes('/download')) {
                         videoUrl = videoUrl.replace('/download', '/preview');
                     } else if (videoUrl.includes('/view')) {
                         videoUrl = videoUrl.replace('/view', '/preview');
                     }
+                } else if (videoUrl.includes('icedrive.io')) {
+                    // Keep Icedrive URLs as they are - they work directly
+                    videoUrl = decodeURIComponent(videoUrl);
                 }
-                video.src = decodeURIComponent(videoUrl);
+                video.src = videoUrl;
             }
         };
 
