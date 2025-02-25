@@ -78,17 +78,23 @@
             border: none;
             color: white;
             cursor: pointer;
-            padding: 10px;
+            padding: 12px;
             border-radius: 50%;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
             justify-content: center;
+            backdrop-filter: blur(2px);
         }
 
         .control-button:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.15);
+            color: #ff0000;
+        }
+
+        .control-button:active {
+            transform: scale(0.95);
         }
 
         .control-button:active {
@@ -101,39 +107,46 @@
 
         .progress-bar {
             flex-grow: 1;
-            height: 5px;
+            height: 8px;
             background: rgba(255, 255, 255, 0.2);
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             position: relative;
             margin: 0 12px;
-            transition: height 0.2s;
+            transition: all 0.3s ease;
         }
 
         .progress-bar:hover {
-            height: 8px;
+            height: 12px;
         }
 
         .progress {
             height: 100%;
             background: #ff0000;
-            border-radius: 5px;
+            border-radius: 8px;
             width: 0;
             position: relative;
+            transition: width 0.1s linear;
         }
 
         .progress::after {
             content: '';
             position: absolute;
-            right: -6px;
+            right: -8px;
             top: 50%;
             transform: translateY(-50%);
-            width: 12px;
-            height: 12px;
+            width: 16px;
+            height: 16px;
             background: #ff0000;
             border-radius: 50%;
             opacity: 0;
-            transition: opacity 0.2s;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
+        }
+
+        .progress-bar:hover .progress::after {
+            opacity: 1;
+            transform: translateY(-50%) scale(1.1);
         }
 
         .progress-bar:hover .progress::after {
@@ -341,10 +354,7 @@
             const hours = Math.floor(seconds / 3600);
             const minutes = Math.floor((seconds % 3600) / 60);
             const secs = Math.floor(seconds % 60);
-            if (hours > 0) {
-                return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-            }
-            return `${minutes}:${secs.toString().padStart(2, '0')}`;
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
         // Update play button on video events
@@ -393,24 +403,29 @@
             const quality = e.target.value;
             const currentTime = video.currentTime;
             const isPaused = video.paused;
+            const videoUrl = video.src;
             
-            // Store the current video URL
-            const videoUrl = new URL(video.src);
+            // Save current video state
+            const volume = video.volume;
+            const playbackRate = video.playbackRate;
             
-            // Update quality parameter in URL if it exists
-            if (videoUrl.searchParams.has('quality')) {
-                videoUrl.searchParams.set('quality', quality);
-            } else {
-                videoUrl.searchParams.append('quality', quality);
-            }
+            // Update video source with quality parameter
+            const url = new URL(videoUrl);
+            url.searchParams.set('quality', quality);
             
-            // Update video source
-            video.src = videoUrl.toString();
+            // Update video properties
+            video.src = url.toString();
             video.currentTime = currentTime;
+            video.volume = volume;
+            video.playbackRate = playbackRate;
             
+            // Restore playback state
             if (!isPaused) {
-                video.play();
+                video.play().catch(err => console.log('Playback failed:', err));
             }
+            
+            // Close settings menu
+            settingsMenu.style.display = 'none';
         };
     </script>
 </body>
