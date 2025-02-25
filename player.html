@@ -244,8 +244,14 @@
         // Load video from URL parameter
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
-            const videoUrl = urlParams.get('video');
+            let videoUrl = urlParams.get('video');
             if (videoUrl) {
+                // Handle Google Drive URLs by ensuring they use the correct format
+                if (videoUrl.includes('drive.google.com')) {
+                    if (videoUrl.includes('/view')) {
+                        videoUrl = videoUrl.replace('/view', '/preview');
+                    }
+                }
                 video.src = decodeURIComponent(videoUrl);
             }
         };
