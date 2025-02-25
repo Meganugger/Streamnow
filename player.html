@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamNow Player</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .video-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+        }
+        video {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="video-container">
+        <video width="100%" height="auto" controls autoplay>
+            <source src="" type="video/mp4" id="videoSource">
+        </video>
+    </div>
+    <script>
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const videoUrl = urlParams.get('video');
+            if (videoUrl) {
+                document.querySelector('#videoSource').src = decodeURIComponent(videoUrl);
+                document.querySelector('video').load();
+            }
+        };
+    </script>
+</body>
+</html>
