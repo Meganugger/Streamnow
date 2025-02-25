@@ -135,6 +135,47 @@
             border-radius: 50%;
             cursor: pointer;
         }
+
+        .settings-menu, .speed-menu {
+            position: absolute;
+            bottom: 60px;
+            right: 10px;
+            background: rgba(28, 28, 28, 0.9);
+            border-radius: 4px;
+            padding: 8px 0;
+            display: none;
+            min-width: 200px;
+        }
+
+        .settings-item, .speed-item {
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .settings-item:hover, .speed-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .speed-item.active {
+            color: #2196F3;
+        }
+
+        .settings-select {
+            background: transparent;
+            color: white;
+            border: none;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .settings-select option {
+            background: #1c1c1c;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -161,9 +202,36 @@
                 </button>
                 <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.1" value="1">
             </div>
+            <button class="control-button" id="playbackSpeedBtn">
+                <span class="material-icons">speed</span>
+            </button>
+            <button class="control-button" id="settingsBtn">
+                <span class="material-icons">settings</span>
+            </button>
             <button class="control-button" id="fullscreenBtn">
                 <span class="material-icons">fullscreen</span>
             </button>
+        </div>
+        <div class="settings-menu" id="settingsMenu">
+            <div class="settings-item" id="qualitySettings">
+                <span class="settings-label">Quality</span>
+                <select class="settings-select">
+                    <option value="1080">1080p</option>
+                    <option value="720">720p</option>
+                    <option value="480">480p</option>
+                    <option value="360">360p</option>
+                </select>
+            </div>
+        </div>
+        <div class="speed-menu" id="speedMenu">
+            <div class="speed-item" data-speed="0.25">0.25x</div>
+            <div class="speed-item" data-speed="0.5">0.5x</div>
+            <div class="speed-item" data-speed="0.75">0.75x</div>
+            <div class="speed-item active" data-speed="1">Normal</div>
+            <div class="speed-item" data-speed="1.25">1.25x</div>
+            <div class="speed-item" data-speed="1.5">1.5x</div>
+            <div class="speed-item" data-speed="1.75">1.75x</div>
+            <div class="speed-item" data-speed="2">2x</div>
         </div>
     </div>
     <script>
@@ -245,6 +313,42 @@
         // Update play button on video events
         video.onplay = () => playPauseBtn.innerHTML = '<span class="material-icons">pause</span>';
         video.onpause = () => playPauseBtn.innerHTML = '<span class="material-icons">play_arrow</span>';
+
+        // Settings menu
+        const settingsBtn = document.getElementById('settingsBtn');
+        const settingsMenu = document.getElementById('settingsMenu');
+        const speedBtn = document.getElementById('playbackSpeedBtn');
+        const speedMenu = document.getElementById('speedMenu');
+
+        settingsBtn.onclick = (e) => {
+            e.stopPropagation();
+            settingsMenu.style.display = settingsMenu.style.display === 'block' ? 'none' : 'block';
+            speedMenu.style.display = 'none';
+        };
+
+        speedBtn.onclick = (e) => {
+            e.stopPropagation();
+            speedMenu.style.display = speedMenu.style.display === 'block' ? 'none' : 'block';
+            settingsMenu.style.display = 'none';
+        };
+
+        document.onclick = () => {
+            settingsMenu.style.display = 'none';
+            speedMenu.style.display = 'none';
+        };
+
+        // Playback speed control
+        const speedItems = document.querySelectorAll('.speed-item');
+        speedItems.forEach(item => {
+            item.onclick = (e) => {
+                e.stopPropagation();
+                const speed = parseFloat(item.dataset.speed);
+                video.playbackRate = speed;
+                speedItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                speedMenu.style.display = 'none';
+            };
+        });
     </script>
 </body>
 </html>
