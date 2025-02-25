@@ -39,6 +39,15 @@
             max-height: 100vh;
             object-fit: contain;
             background: #000;
+            filter: brightness(1) !important;
+        }
+
+        video::-webkit-media-controls {
+            display: none !important;
+        }
+
+        video:fullscreen {
+            filter: brightness(1) !important;
         }
 
         .video-controls {
@@ -219,6 +228,9 @@
             <button class="control-button" id="fullscreenBtn">
                 <span class="material-icons">fullscreen</span>
             </button>
+            <button class="control-button" id="downloadBtn">
+                <span class="material-icons">download</span>
+            </button>
         </div>
         <div class="speed-menu" id="speedMenu">
             <div class="speed-item" data-speed="0.25">0.25x</div>
@@ -317,6 +329,25 @@
         // Update play button on video events
         video.onplay = () => playPauseBtn.innerHTML = '<span class="material-icons">pause</span>';
         video.onpause = () => playPauseBtn.innerHTML = '<span class="material-icons">play_arrow</span>';
+
+        // Double click to exit fullscreen
+        video.ondblclick = () => {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+                fullscreenBtn.innerHTML = '<span class="material-icons">fullscreen</span>';
+            } else {
+                video.requestFullscreen();
+                fullscreenBtn.innerHTML = '<span class="material-icons">fullscreen_exit</span>';
+            }
+        };
+
+        // Download button
+        const downloadBtn = document.getElementById('downloadBtn');
+        downloadBtn.onclick = () => {
+            const videoUrl = video.src;
+            const downloadUrl = videoUrl.includes('preview') ? videoUrl.replace('/preview', '/download') : videoUrl;
+            window.open(downloadUrl, '_blank');
+        };
 
         // Settings menu
         const speedBtn = document.getElementById('playbackSpeedBtn');
