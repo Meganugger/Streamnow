@@ -1,798 +1,250 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StreamNow - Movies & Series</title>
-    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/Meganugger/Streamnow/main/StreamNow_logo-removebg-preview.png">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <title>StreamNow Player</title>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+        
         body {
-            font-family: 'Open Sans', sans-serif;
-            background: #141414;
-            background-image: radial-gradient(farthest-corner at 40% 40%, rgba(40, 40, 40, 0.9) 0%, rgba(20, 20, 20, 1) 80%);
+            margin: 0;
+            padding: 0;
+            background: #202124;
+            height: 100vh;
+            font-family: 'Google Sans', sans-serif;
             color: white;
-            line-height: 1.6;
-            overflow-x: hidden;
-            min-height: 100vh;
         }
-        header {
-            background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.8) 100%);
-            padding: 16px 4%;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 999;
-            transition: all 0.3s ease;
+
+        .top-bar {
+            background: #202124;
+            padding: 16px 24px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        header.scrolled {
-            background: rgb(20, 20, 20);
+
+        .title {
+            font-size: 18px;
+            margin-left: 12px;
+            color: #fff;
         }
-        .search-container {
-            margin-right: 50px;
-            position: relative;
-        }
-        .search-input {
-            padding: 8px 40px 8px 16px;
-            border-radius: 4px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(0, 0, 0, 0.75);
-            color: white;
-            width: 260px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-        .search-input:focus {
-            width: 300px;
-            background: rgba(0, 0, 0, 0.9);
-            border-color: white;
-        }
-        .search-input::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
-        .search-input:focus {
-            outline: none;
-            background: rgba(255, 255, 255, 0.3);
-        }
-        .movie-grid {
-            padding: 120px 40px 40px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-            max-width: 1800px;
-            margin: 0 auto;
-        }
-        .movie-card {
-            position: relative;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border-radius: 4px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-        .movie-card:hover {
-            transform: scale(1.05);
-            z-index: 2;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
-        }
-        .movie-card img {
+
+        .video-container {
             width: 100%;
-            height: 300px;
-            object-fit: cover;
-            border-radius: 4px;
-            transition: all 0.3s ease;
+            height: calc(100vh - 64px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+            position: relative;
         }
-        .movie-card:hover img {
-            filter: brightness(1.2);
+
+        video {
+            width: 100%;
+            height: 100%;
+            max-height: 100vh;
+            object-fit: contain;
+            background: #000;
         }
-        .movie-info {
+
+        .video-controls {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 15px;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 50%, transparent 100%);
-            opacity: 0;
-            transition: all 0.3s ease;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            padding: 12px 24px;
             display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .movie-card:hover .movie-info {
+            align-items: center;
+            gap: 12px;
             opacity: 1;
-        }
-        .movie-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
-            backdrop-filter: blur(8px);
-        }
-        .modal-content {
-            position: relative;
-            width: 98%;
-            max-width: 1800px;
-            margin: 10px auto;
-            background: rgba(24, 24, 24, 0.98);
-            padding: 40px;
-            border-radius: 8px;
-            color: white;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            display: flex;
-            flex-direction: column;
-            height: 98vh;
-            overflow-y: auto;
-        }
-        .modal-content iframe {
-            min-height: 700px;
-            margin-bottom: 30px;
-        }
-        .modal-header {
-            padding: 0 20px;
-            margin-bottom: 30px;
-        }
-        .modal iframe {
-            width: 100%;
-            height: calc(98vh - 180px);
-            margin-top: auto;
-            border-radius: 4px;
-            order: 3;
-        }
-        .modal-title {
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
-        .modal-description {
-            color: #999;
-            margin-bottom: 20px;
-        }
-        .modal iframe {
-            order: 2;
-            width: 100%;
-            height: 500px;
-            margin-bottom: 20px;
-            border-radius: 4px;
-        }
-        .modal-buttons {
-            order: 3;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: auto;
-            padding-top: 20px;
-        }
-        .watch-button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: #e50914;
-            color: white;
-            padding: 12px 30px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 14px;
-            border: none;
-            cursor: pointer;
-            min-width: 150px;
-        }
-        .watch-button:hover {
-            background: #f40612;
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(229, 9, 20, 0.7);
-        }
-        .modal-buttons {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        .trailer-button {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        .trailer-button:hover {
-            background: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-        }
-        .close-modal {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 24px;
-            color: #fff;
-            cursor: pointer;
-            background: none;
-            border: none;
-            padding: 5px;
-        }
-        @media (max-width: 768px) {
-            .movie-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                padding: 100px 20px 20px;
-            }
-            .logo {
-                font-size: 36px;
-                margin-left: 20px;
-            }
-            .modal iframe {
-                height: 300px;
-            }
-        }
-        .logo {
-            color: #e50914;
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 36px;
-            letter-spacing: 2px;
-            margin-left: 50px;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .header-logo {
-            width: 95px;
-            height: 95px;
-            margin-right: 20px;
-            margin-left: -30px;
-            padding: 10px;
-            object-fit: contain;
-        }
-        #header {
-            height: 70px;
-            overflow: hidden;
-        }
-        .nav-tabs {
-            display: flex;
-            gap: 20px;
-            margin-left: 30px;
-        }
-        .nav-tab {
-            color: #fff;
-            text-decoration: none;
-            font-size: 16px;
-            padding: 5px 10px;
-            border-bottom: 2px solid transparent;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        .nav-tab.active {
-            border-bottom-color: #e50914;
-        }
-        .episodes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            padding: 20px;
-            width: 100%;
-            margin-top: 20px;
-        }
-        .episode-card {
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 4px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .episode-card:hover {
-            transform: scale(1.05);
-        }
-        .episode-thumbnail {
-            width: 100%;
-            height: 169px;
-            object-fit: cover;
-        }
-        .episode-info {
-            padding: 15px;
-        }
-        .episode-title {
-            font-size: 16px;
-            margin-bottom: 8px;
-        }
-        .episode-description {
-            font-size: 14px;
-            color: #999;
+            transition: opacity 0.3s;
         }
 
+        .video-container:hover .video-controls {
+            opacity: 1;
+        }
+
+        .control-button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .control-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .material-icons {
+            font-size: 24px;
+        }
+
+        .progress-bar {
+            flex-grow: 1;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+            margin: 0 8px;
+        }
+
+        .progress {
+            height: 100%;
+            background: #fff;
+            border-radius: 3px;
+            width: 0;
+        }
+
+        .time-display {
+            font-size: 14px;
+            margin: 0 8px;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .volume-slider {
+            width: 80px;
+            height: 4px;
+            -webkit-appearance: none;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            outline: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-    <header id="header">
-        <a href="#" class="logo"><img src="https://raw.githubusercontent.com/Meganugger/Streamnow/main/StreamNow_logo-removebg-preview.png" alt="StreamNow Logo" class="header-logo">StreamNow</a>
-        <div class="nav-tabs">
-            <div class="nav-tab active" onclick="switchTab('movies', event)">Movies</div>
-            <div class="nav-tab" onclick="switchTab('series', event)">Series</div>
-        </div>
-        <div class="search-container">
-            <input type="text" class="search-input" placeholder="Search..." id="searchInput">
-        </div>
-    </header>
-
-    <div class="movie-grid" id="moviesGrid"></div>
-    <div class="movie-grid" id="seriesGrid" style="display: none;"></div>
-
-    <div id="movieModal" class="modal">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closeModal()">&times;</button>
-            <div class="modal-header">
-                <h2 id="modalTitle" class="modal-title"></h2>
-                <p id="modalDescription" class="modal-description"></p>
+    <div class="top-bar">
+        <span class="material-icons">movie</span>
+        <span class="title">Now Playing</span>
+    </div>
+    <div class="video-container">
+        <video id="videoPlayer">
+            <source src="" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="video-controls">
+            <button class="control-button" id="playPauseBtn">
+                <span class="material-icons">play_arrow</span>
+            </button>
+            <div class="progress-bar" id="progressBar">
+                <div class="progress" id="progress"></div>
             </div>
-            <iframe id="modalTrailer" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-            <div id="episodesList" class="episodes-grid" style="display: none;"></div>
-            <div class="modal-buttons">
-                <a id="watchButton" class="watch-button" target="_blank">Watch Now</a>
+            <span class="time-display" id="timeDisplay">0:00 / 0:00</span>
+            <div class="volume-control">
+                <button class="control-button" id="muteBtn">
+                    <span class="material-icons">volume_up</span>
+                </button>
+                <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.1" value="1">
             </div>
+            <button class="control-button" id="fullscreenBtn">
+                <span class="material-icons">fullscreen</span>
+            </button>
         </div>
     </div>
-
     <script>
-        const movies = [
-            {
-                title: "Garfield: Héros malgré lui",
-                description: "Le célèbre chat d'intérieur, amateur de lasagnes et qui déteste les lundis, est sur le point d'être embarqué dans une folle aventure.",
-                thumbnail: "https://fr.web.img6.acsta.net/c_310_420/img/a8/48/a848eac086dc48b8b44caefdb9bdde3c.jpg",
-                trailerUrl: "https://www.youtube.com/embed/cldTF5e8wpQ?autoplay=1",
-                watchUrl: "https://drive.google.com/file/d/1ApwtxNupjkD4QNDNh_v42HX10Ok42s_B/view?usp=sharing"
-            },
-            {
-                title: "Avengers: Infinity War",
-                description: "Les Avengers et leurs alliés devront être prêts à tout sacrifier pour neutraliser le redoutable Thanos avant que son attaque éclair ne conduise à la destruction complète de l'univers.",
-                thumbnail: "https://fr.web.img3.acsta.net/c_310_420/pictures/18/03/16/14/42/0611719.jpg",
-                trailerUrl: "https://www.youtube.com/embed/eIWs2IUr3Vs?autoplay=1",
-                watchUrl: "https://icecube-eu-400.icedrive.io/download?p=v4pkYF22e3a1vRhSANU02A5m0YkSJTt6aP6zV9i5QxN4MBcdajSg7GvxBB6CsTErkXLwaL24OJC4HSovRIMTpM2TYcz3f6Fm63dMEuYZCk4RzKc7smZ11uoKCzxlgpS.gkoH67s8y02E_Lmbe3hrTLjyKnxWcVjwfVF8v2_4u47m9pfTzXqRRKmtc13tindin9rqzD4ucFCSshAYYpQNigjdi5FQFCqsKrm.y8f3GwLtbFSNd71OfRIVKyEz.fbKWNiMZP1uyvd427C4LLklBa8_Q.0IR6R4p5gI1e2TaqA-"
-            },
-            {
-                title: "Avengers: Endgame",
-                description: "Thanos ayant anéanti la moitié de l'univers, les Avengers restants resserrent les rangs dans ce vingt-deuxième film des Studios Marvel.",
-                thumbnail: "https://fr.web.img6.acsta.net/c_310_420/pictures/19/04/04/09/04/0472053.jpg",
-                trailerUrl: "https://www.youtube.com/embed/wV-Q0o2OQjQ?autoplay=1",
-                watchUrl: "https://drive.google.com/file/d/1uiQWjxdxM1amkVh-AtLKeDga9i9bBrhE/view?usp=sharing"
-            },
-            {
-                title: "Deadpool & Wolverine",
-                description: "Après avoir échoué à rejoindre l'équipe des Avengers, Wade Wilson passe d'un petit boulot à un autre sans vraiment trouver sa voie.",
-                thumbnail: "https://fr.web.img3.acsta.net/c_310_420/img/e4/cd/e4cd101f2e66f4e7818fcf53d05c006a.jpg",
-                trailerUrl: "https://www.youtube.com/embed/KT-8QL04x40?autoplay=1",
-                watchUrl: "https://drive.google.com/file/d/1vH1vyv-hJmflULxL6kBOB45QH0jpnKMN/view?usp=sharing"
-            },
-            {
-                title: "Spider-Man: Across the Spider-Verse",
-                description: "Après avoir retrouvé Gwen Stacy, Spider-Man est catapulté à travers le Multivers, où il rencontre une équipe de Spider-Héros.",
-                thumbnail: "https://fr.web.img6.acsta.net/c_310_420/pictures/23/05/11/10/00/1986933.jpg",
-                trailerUrl: "https://www.youtube.com/embed/iZSRP2UYtO4?autoplay=1",
-                watchUrl: "https://drive.google.com/file/d/1_3f2Us77TF71N0Il1lRxa2qFddn4kGEt/view?usp=sharing"
-            },
-            {
-                title: "Le Robot Sauvage",
-                description: "Une unité ROZZUM 7134 alias 'Roz' qui après avoir fait naufrage sur une île déserte doit apprendre à adapter à un environnement hostile.",
-                thumbnail: "https://fr.web.img3.acsta.net/c_310_420/img/7a/10/7a1098f21c765b7d4935240e1af094ed.jpg",
-                trailerUrl: "https://www.youtube.com/embed/3iHLk8nHX80?autoplay=1",
-                watchUrl: "https://drive.google.com/file/d/1xF2FVX4bxJvVYeWMqxoXy4uchKQAPdlq/view?usp=sharing"
-            },
-            {
-                title: "Captain America: Civil War",
-                description: "Steve Rogers est désormais à la tête des Avengers, dont la mission est de protéger l'humanité.",
-                thumbnail: "https://fr.web.img3.acsta.net/c_310_420/pictures/16/03/11/09/46/182814.jpg",
-                trailerUrl: "https://www.youtube.com/embed/fuIIGDjEj8Q?autoplay=1",
-                watchUrl: "https://drive.google.com/file/d/12o6V7hZgB5e_C69rnp9lp901D60smHyo/view?usp=sharing"
-            },
-            {
-                title: "Moi, Moche et Méchant 4",
-                description: "Gru et sa famille doivent fuir face à un nouvel ennemi, Maxime Le Mal.",
-                thumbnail: "https://fr.web.img5.acsta.net/c_310_420/img/cb/3d/cb3d42b81f3003e54a90fd77ddabaf14.jpg",
-                trailerUrl: "https://www.youtube.com/embed/2i776vPid38?autoplay=1",
-                watchUrl: "https://drive.google.com/file/d/1oX-12Waj_VRdmz7KV4AYKjLyOy3BkIBH/view?usp=sharing"
-            },
-            {
-                title: "One Piece Film - Red",
-                description: "Luffy et son équipage assistent à un festival de musique où la chanteuse Uta va révéler sa puissance exceptionnelle.",
-                thumbnail: "https://fr.web.img2.acsta.net/c_310_420/pictures/22/06/08/13/18/5161934.jpg",
-                trailerUrl: "https://www.youtube.com/embed/XfkjE-NbYyA?autoplay=1",
-                watchUrl: "https://drive.google.com/file/d/1wNcFqC5jSVR9QLYnJ5pVzQXaJhGR2V3n/view?usp=sharing"
-            },
-            {
-                title: "Sonic 2 le film",
-                description: "Sonic veut prouver qu'il a l'étoffe d'un véritable héros quand le Dr Robotnik refait son apparition.",
-                thumbnail: "https://fr.web.img3.acsta.net/c_310_420/pictures/22/03/14/15/39/4137538.jpg",
-                trailerUrl: "https://www.youtube.com/embed/AXuhIwEz1qI?autoplay=1",
-                watchUrl: "https://drive.google.com/file/d/1Mrd2aaTp8QyHX7nkrEKhoNxfARx2HCQl/view?usp=sharing"
-            },
-            {
-                title: "Dragon Ball Super: Super Hero",
-                description: "L'armée du Ruban Rouge crée les cyborgs ultimes, Gamma 1 et Gamma 2, qui lancent une attaque contre Piccolo et Son Gohan.",
-                thumbnail: "https://www.glenat.com/sites/default/files/images/livres/couv/9782344059494-001-T.jpeg",
-                trailerUrl: "https://www.youtube.com/embed/oWMbSVLE-Fc?autoplay=1",
-                watchUrl: "https://drive.google.com/file/d/1GrOZ6ltpoT9MBI1RNCzhBBU1j5kcYvXw/view?usp=sharing"
-            },
-            {
-                title: "Dragon Ball Super: Broly",
-                description: "Goku et Vegeta font face à un nouvel ennemi, le Super Saïyen Légendaire Broly.",
-                thumbnail: "https://fr.web.img6.acsta.net/c_310_420/pictures/19/02/22/16/14/0019120.jpg",
-                trailerUrl: "https://www.youtube.com/embed/PW8fyoQhJEE?autoplay=1",
-                watchUrl: "https://drive.google.com/file/d/1ToSruIUlqLcLYg1Y6mlOKrs1d9AtiXkl/view?usp=sharing"
-            },
-            {
-                title: "Vice-Versa 2",
-                description: "Riley est désormais une adolescente, ce qui déclenche l'arrivée de nouvelles émotions au quartier général.",
-                thumbnail: "https://fr.web.img5.acsta.net/c_310_420/img/f5/4c/f54c3310f101fe8ae4bba9e566bca1b5.jpg",
-                trailerUrl: "https://www.youtube.com/embed/exg3nieXnqQ?autoplay=1",
-                watchUrl: "https://drive.google.com/file/d/1oeHSVN3PF1OUufyhMJv-jsXniuHufuNf/view?usp=sharing"
-            },
-            {
-                title: "Vice Versa",
-                description: "Au Quartier Général de Riley, cinq Émotions veillent à son bonheur.",
-                thumbnail: "https://fr.web.img3.acsta.net/c_310_420/pictures/15/04/16/13/58/571071.jpg",
-                trailerUrl: "https://www.youtube.com/embed/J4_8jijwNs0?autoplay=1",
-                watchUrl: "https://drive.google.com/file/d/11xQZE9KdMrjBRL23gX4pv471hA-PKpr6/view?usp=sharing"
-            },
-            {
-                title: "Venom: The Last Dance",
-                description: "Eddie et Venom sont en cavale, traqués par leurs semblables.",
-                thumbnail: "https://fr.web.img3.acsta.net/c_310_420/img/57/b3/57b356018fe053ff81efa47e79cfb780.jpg",
-                trailerUrl: "https://www.youtube.com/embed/TEg5kTBN22I?autoplay=1",
-                watchUrl: "https://drive.google.com/file/d/154gjfRB47ib83pO21LkHQmHPAepFc_I3/view?usp=sharing"
-            },
-            {
-                title: "Spider-Man: No Way Home",
-                description: "Spider-Man est démasqué et demande l'aide de Doctor Strange, ce qui rend les enjeux encore plus dangereux.",
-                thumbnail: "https://fr.web.img2.acsta.net/c_310_420/pictures/21/11/16/10/01/4860598.jpg",
-                trailerUrl: "https://www.youtube.com/embed/4InqzlHb9zE?autoplay=1",
-                watchUrl: "https://drive.google.com/file/d/1UnMTOag0ZFW9Osu4XRYcfsV8qjPp-Yz8/view?usp=sharing"
-            },
-            {
-                title: "Sonic 3 - le film",
-                description: "Sonic, Knuckles et Tails se retrouvent face à un nouvel adversaire, Shadow, mystérieux et puissant ennemi aux pouvoirs inédits. Dépassée sur tous les plans, la Team Sonic va devoir former une alliance improbable pour tenter d’arrêter Shadow et protéger notre planète.",
-                thumbnail: "https://fr.web.img2.acsta.net/c_310_420/img/85/e7/85e77c51c172da4aec13679210295a11.jpg",
-                trailerUrl: "https://www.youtube.com/embed/TQ-9We-lxiA?autoplay=1",
-                watchUrl: "https://drive.google.com/file/d/1CXOFUQDuo3krIGvXhmtV-LXGeQo_vQ8b/view?usp=sharing"
-             },
-             {
-                title: "Sonic le film",
-                description: "L'histoire du hérisson bleu le plus rapide du monde qui arrive sur Terre, sa nouvelle maison. Sonic et son nouveau meilleur ami Tom font équipe pour sauver la planète du diabolique Dr. Robotnik, bien déterminé à régner sur le monde entier.",
-                thumbnail: "https://fr.web.img6.acsta.net/c_310_420/pictures/20/02/10/17/16/0746079.jpg",
-                trailerUrl: "https://www.youtube.com/embed/NCZTYdAP6w0?autoplay=1",
-                watchUrl: "https://drive.google.com/file/d/1wdpsW_7PkkOaZKoWyBhA-4mk46wiVCqK/view?usp=sharing?usp=sharing"
-             },
-             {
-                title: "Mufasa : Le Roi Lion",
-                description: "Rafiki raconte à la jeune lionne Kiara - la fille de Simba et Nala – la légende de Mufasa. Il est aidé en cela par Timon et Pumbaa, dont les formules choc sont désormais bien connues. Relatée sous forme de flashbacks, l'histoire de Mufasa est celle d’un lionceau orphelin, seul et désemparé qui, un jour, fait la connaissance du sympathique Taka, héritier d'une lignée royale. Cette rencontre fortuite marque le point de départ d’un périple riche en péripéties d’un petit groupe « d’indésirables » qui s’est formé autour d’eux et qui est désormais à la recherche de son destin. Leurs liens d’amitié seront soumis à rude épreuve lorsqu’il leur faudra faire équipe pour échapper à un ennemi aussi menaçant que mortel…",
-                thumbnail: "https://fr.web.img6.acsta.net/c_310_420/img/f5/f2/f5f2447c4246e42eb3e69040605d7cf1.jpg",
-                trailerUrl: "https://www.youtube.com/embed/2rWXguw0S-k?autoplay=1",
-                watchUrl: "https://drive.google.com/file/d/1lhpfp2aeM21aJoqMts2MUunNE5iNd9FT/view?usp=sharing"
-             },
-             {
-                title: "Vaiana 2",
-                description: "Après avoir reçu une invitation inattendue de ses ancêtres, Vaiana entreprend un périple qui la conduira jusqu’aux eaux dangereuses situées aux confins des mers des îles du Pacifique. Elle y vivra des péripéties comme jamais vécues auparavant.",
-                thumbnail: "https://fr.web.img4.acsta.net/c_310_420/img/9e/c9/9ec9a076d8516b78e1923dd76806f13e.jpg",
-                trailerUrl: "https://www.youtube.com/embed/HrVJe2P9Uuk?autoplay=1",
-                watchUrl: "https://drive.google.com/file/d/1Tf4uzbHXi5DsKinIgdYnik9lTEkH0FQY/view?usp=sharing"
-             },
-             {
-                title: "Vaiana",
-                description: "Il y a 3 000 ans, les plus grands marins du monde voyagèrent dans le vaste océan Pacifique, à la découverte des innombrables îles de l'Océanie. Mais pendant le millénaire qui suivit, ils cessèrent de voyager. Et personne ne sait pourquoi...",
-                thumbnail: "https://fr.web.img6.acsta.net/c_310_420/pictures/16/09/14/09/17/148002.jpg",
-                trailerUrl: "https://www.youtube.com/embed/JIl74jge_Wg?autoplay=1",
-                watchUrl: "https://drive.google.com/file/d/1Fd_iJkTlQ-4ZDqrXKmHQ8Wdbmua-zEfA/view?usp=sharing"
-             }
-        ];
+        const video = document.getElementById('videoPlayer');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const muteBtn = document.getElementById('muteBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progress = document.getElementById('progress');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const volumeSlider = document.getElementById('volumeSlider');
 
-        const series = [
-            {
-                title: "Squid Game - Saison 2",
-                description: "Annonçant le grand retour du succès planétaire, un nouveau chapitre s'ouvre pour Gi-hun, qui a une idée en tête après avoir renoncé à partir pour les États-Unis.",
-                thumbnail: "https://fr.web.img3.acsta.net/r_1920_1080/img/92/4a/924acf41c50c62c30325565c96727751.jpg",
-                trailerUrl: "https://www.youtube.com/embed/0bzcYhRiR4k?autoplay=1",
-                episodes: [
-                    {
-                        title: "Episode 1 - Du pain et des jeux de hasard",
-                        description: "Une fois à l'aéroport, Gi-hun fait demi-tour et jure de se venger. Depuis sa planque, il intensifie son enquête pour retrouver le recruteur qui cherche de nouveaux joueurs.",
-                        thumbnail: "https://fr.web.img5.acsta.net/c_400_200/img/f4/bb/f4bbbf766d588cd52b9f834787a848f7.jpg",
-                        watchUrl: "https://drive.google.com/file/d/13bpE6GisnM7SFqWgq2KwgV7tmtKPPyv_/view?usp=sharing"
-                    },
-                    {
-                        title: "Episode 2 - La fête d'Halloween",
-                        description: "Gi-hun parvient enfin à se procurer une invitation, pour le 31 octobre, jour d'Halloween. Au cours d'une rencontre tendue avec Jun-ho, chacun annonce ses objectifs mutuels.",
-                        thumbnail: "https://fr.web.img3.acsta.net/c_400_200/img/a1/37/a13784a5c36b128836b52c9090f5c376.jpg",
-                        watchUrl: "https://drive.google.com/file/d/1xsMeDOdgdOFdiQbfHkOeUvIG3G7sxJqq/view?usp=sharing"
-                    },
-                    {
-                        title: "Episode 3 - 001",
-                        description: "De nouveaux participants se réunissent pour tenter de gagner 45,6 milliards de wons. Après un premier tour éprouvant, le sort des survivants est remis en jeu par un vote.",
-                        thumbnail: "https://fr.web.img5.acsta.net/c_400_200/img/d1/9e/d19e16474fdd077ff617b034387479b1.jpg",
-                        watchUrl: "https://drive.google.com/file/d/1KikJyQMdC4sj8me8BFfOu72zsX0fB8T8/view?usp=sharing"
-                    },
-                    {
-                        title: "Episode 4 - Six jambes",
-                        description: "Les joueurs se préparent pour la prochaine épreuve : le pentathlon à six jambes, où chaque membre d'équipe doit réussir un mini-jeu pour survivre, sous peine d'élimination collective.",
-                        thumbnail: "https://fr.web.img6.acsta.net/c_400_200/img/a5/82/a582fd93f6944b5b27f9d2966d7e3906.jpg",
-                        watchUrl: "https://drive.google.com/file/d/12YypqNOWYFNQ9VbIQ8eDR-cAXV_5DF5g/view?usp=sharing"
-                    },
-                    {
-                        title: "Episode 5 - Un jeu de plus",
-                        description: "Kang No-eul se fait des ennemis à cause de ses actions irresponsables. La tension est à son comble quand les joueurs restants votent pour décider s'ils passeront au tour suivant.",
-                        thumbnail: "https://fr.web.img6.acsta.net/c_400_200/img/c9/da/c9da0c14b52260d4776991dd0bcae41e.jpg",
-                        watchUrl: "https://drive.google.com/file/d/1GRd1wWxrSC2cZdD2xl_NnhHLzLyT-5Y5/view?usp=sharing"
-                    },
-                    {
-                        title: "Episode 6 - O ﻿ X",
-                        description: "Jun-ho et son équipe s'apprêtent à intervenir sur une île suspecte. Alors que les enjeux monétaires et les tensions s'accroissent, les joueurs se divisent en deux factions rivales.",
-                        thumbnail: "https://fr.web.img4.acsta.net/c_400_200/img/2a/4d/2a4d6eaee54cd937918579f608d311bb.jpg",
-                        watchUrl: "https://drive.google.com/file/d/11q8HBtI5C9kzAnyXIK0CbuCe3GRDPbDC/view?usp=sharing"
-                    },
-                    {
-                        title: "Episode 7 - Amis ou ennemis",
-                        description: "Les derniers participants élaborent des stratégies pour survivre à la nuit, qui promet d'être sanglante. Gi-hun propose un plan risqué pour lequel il va avoir besoin de fidèles alliés.",
-                        thumbnail: "https://fr.web.img5.acsta.net/c_400_200/img/35/5a/355ae1795d22f8e826aec417fcbcbc68.jpg",
-                        watchUrl: "https://drive.google.com/file/d/1-4_67YAaMw6YZZlE-GItxh6a3udDvt37/view?usp=sharing"
-                    }
-                ]
-            },
-            {
-                title: "Squid Game - Saison 1",
-                description: "Tentés par un prix alléchant en cas de victoire, des centaines de joueurs désargentés acceptent de s'affronter lors de jeux pour enfants aux enjeux mortels.",
-                thumbnail: "https://fr.web.img5.acsta.net/c_310_420/pictures/21/09/14/10/18/1090569.jpg",
-                trailerUrl: "https://www.youtube.com/embed/GYoD8oOH31M?autoplay=1",
-                episodes: [
-                    {
-                        title: "Episode 1 - Un, deux, trois, soleil",
-                        description: "Ruiné et prêt à tout, Gi-hun accepte de participer à un jeu mystérieux. Mais dès la première épreuve, la promesse d'argent facile fait place à l'horreur.",
-                        thumbnail: "https://fr.web.img3.acsta.net/c_400_200/pictures/21/09/27/11/05/0781261.jpg",
-                        watchUrl: "https://drive.google.com/file/d/1oDUt6u22YDZ0vOGCYClmEAZtjr24wcDu/view?usp=sharing"
-                    },
-                    {
-                        title: "Episode 2 - Enfer",
-                        description: "Le groupe organise un vote pour décider s'il continue ou abandonne l'aventure. Mais la réalité du monde extérieur peut s'avérer aussi impitoyable que le jeu.",
-                        thumbnail: "https://fr.web.img2.acsta.net/c_400_200/pictures/21/09/27/11/05/0832746.jpg",
-                        watchUrl: "https://drive.google.com/file/d/101k_Bh_9o13679uO2q-jpvkYNXc19KvL/view?usp=sharing"
-                    },
-                    {
-                        title: "Episode 3 - L'homme au parapluie",
-                        description: "Plusieurs joueurs passent à l'épreuve suivante, aussi délicieuse que mortelle. Certains sont plus avantagés que les autres. Jun-ho réussit quant à lui à s'infiltrer.",
-                        thumbnail: "https://fr.web.img4.acsta.net/c_400_200/pictures/21/09/27/11/05/0881111.jpg",
-                        watchUrl: "https://drive.google.com/file/d/1-TtBNAk88OO2PAY8giGT-BYaNKTKA41c/view?usp=sharing"
-                    },
-                    {
-                        title: "Episode 4 - L'équipe avant tout",
-                        description: "Les joueurs forment des alliances. La nuit tombée, personne n'est à l'abri au dortoir. Pour la troisième épreuve, l'équipe de Gi-hun doit penser de façon stratégique.",
-                        thumbnail: "https://fr.web.img3.acsta.net/c_400_200/pictures/21/09/27/11/05/0929476.jpg",
-                        watchUrl: "https://drive.google.com/file/d/19xK7dHT7BTeywQtmfGof7syc3rBIss02/view?usp=sharing"
-                    },
-                    {
-                        title: "Episode 5 - Un monde juste",
-                        description: " Gi-hun et son équipe se relaient pour monter la garde toute la nuit. Les hommes masqués rencontrent des ennuis dans leur propre camp de conspirateurs.",
-                        thumbnail: "https://fr.web.img6.acsta.net/c_400_200/pictures/21/09/27/11/05/0987202.jpg",
-                        watchUrl: "https://drive.google.com/file/d/1N3ajc4lqenvZ6iaVVDfSWLgya1o-tl77/view?usp=sharing"
-                    },
-                    {
-                        title: "Episode 6 - Gganbu",
-                        description: "Les joueurs se mettent par deux pour la quatrième épreuve. Gi-hun est aux prises avec un dilemme moral. Tandis que Sang-woo choisit de se préserver, Sae-byeok se livre.",
-                        thumbnail: "https://fr.web.img4.acsta.net/c_400_200/pictures/21/09/27/11/05/1032446.jpg",
-                        watchUrl: "https://drive.google.com/file/d/1Emh1-kPPobZXaQp542aTxH7zztflrTYb/view?usp=sharing"
-                    },
-                    {
-                        title: "Episode 7 - VIPS",
-                        description: " Les invités VIP sont accueillis avec les honneurs aux premières loges du spectacle. La pression du cinquième match est tellement forte que certains joueurs craquent.",
-                        thumbnail: "https://fr.web.img3.acsta.net/c_400_200/pictures/21/09/27/11/05/1079251.jpg",
-                        watchUrl: "https://drive.google.com/file/d/17UMlS5bYLsTx1SV7JXfvhQIpW8H0HlEj/view?usp=sharing"
-                    },
-                    {
-                        title: "Episode 8 - Leader",
-                        description: " Avant la dernière épreuve, la méfiance et le dégoût règnent parmi les finalistes. Jun-ho s'enfuit, bien décidé à révéler les sombres dessous de la compétition.",
-                        thumbnail: "https://fr.web.img5.acsta.net/c_400_200/pictures/21/09/27/11/05/1126056.jpg",
-                        watchUrl: "https://drive.google.com/file/d/12h-MMiUAVxi3HCjGgkzr6MzU8wS4qZry/preview?usp=sharing"
-                    },
-                    {
-                        title: "Episode 9 - Jour de chance",
-                        description: " La dernière manche constitue un test tout aussi cruel, mais cette fois, la conclusion repose entre les mains d'un seul joueur. Le cerveau du jeu sort de l'ombre...",
-                        thumbnail: "https://fr.web.img4.acsta.net/c_400_200/pictures/21/09/27/11/05/1171301.jpg",
-                        watchUrl: "https://drive.google.com/file/d/1IzIA_NAhwDN3qOs477HPrdxIIdFSeZ7X/view?usp=sharing"
-                    }
-                ]
-            }
-        ];
-
-        let currentContent = 'movies';
-
-        function switchTab(tab, event) {
-            const moviesGrid = document.getElementById('moviesGrid');
-            const seriesGrid = document.getElementById('seriesGrid');
-            const tabs = document.querySelectorAll('.nav-tab');
-
-            tabs.forEach(t => t.classList.remove('active'));
-            if (event && event.target) {
-                event.target.classList.add('active');
-            }
-
-            if (tab === 'movies') {
-                moviesGrid.style.display = 'grid';
-                seriesGrid.style.display = 'none';
-                currentContent = 'movies';
-                renderMovies(movies);
-            } else {
-                moviesGrid.style.display = 'none';
-                seriesGrid.style.display = 'grid';
-                currentContent = 'series';
-                renderSeries(series);
-            }
-        }
-
-        function createMovieCard(movie) {
-            const card = document.createElement('div');
-            card.className = 'movie-card';
-            card.innerHTML = `
-                <img src="${movie.thumbnail}" alt="${movie.title}">
-                <div class="movie-info">
-                    <div class="movie-title">${movie.title}</div>
-                    <a href="player.html?video=${encodeURIComponent(movie.watchUrl)}" class="watch-button" onclick="event.stopPropagation();" target="_blank">Watch Now</a>
-                </div>
-            `;
-            card.onclick = () => openModal(movie);
-            return card;
-        }
-
-function openPlayer(videoUrl) {
-            const viewUrl = videoUrl.replace('/download?', '/view?');
-            window.open(`player.html?video=${encodeURIComponent(viewUrl)}`, '_blank');
-        }
-
-        function createSeriesCard(series) {
-            const card = document.createElement('div');
-            card.className = 'movie-card';
-            card.innerHTML = `
-                <img src="${series.thumbnail}" alt="${series.title}">
-                <div class="movie-info">
-                    <div class="movie-title">${series.title}</div>
-                    <button class="watch-button">Episodes</button>
-                </div>
-            `;
-            card.querySelector('.watch-button').addEventListener('click', () => {
-                openSeriesModal(series);
-            });
-            return card;
-        }
-
-        function createEpisodeCard(episode) {
-            return `
-                <div class="episode-card" onclick="playEpisode('${episode.watchUrl}')">
-                    <img src="${episode.thumbnail}" class="episode-thumbnail" alt="${episode.title}">
-                    <div class="episode-info">
-                        <div class="episode-title">${episode.title}</div>
-                        <div class="episode-description">${episode.description}</div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function openSeriesModal(series) {
-            const modalTitle = document.getElementById('modalTitle');
-            const modalDescription = document.getElementById('modalDescription');
-            const modalTrailer = document.getElementById('modalTrailer');
-            const episodesList = document.getElementById('episodesList');
-            const watchButton = document.getElementById('watchButton');
-            const movieModal = document.getElementById('movieModal');
-
-            modalTitle.textContent = series.title;
-            modalDescription.textContent = series.description;
-            modalTrailer.src = series.trailerUrl;
-
-            episodesList.innerHTML = series.episodes.map(ep => createEpisodeCard(ep)).join('');
-            episodesList.style.display = 'grid';
-            watchButton.style.display = 'none';
-
-            movieModal.style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        }
-
-
-        function playEpisode(watchUrl) {
-            window.open(watchUrl, '_blank');
-        }
-
-        function openModal(movie) {
-            document.getElementById('modalTitle').textContent = movie.title;
-            document.getElementById('modalDescription').textContent = movie.description;
-            const modalTrailer = document.getElementById('modalTrailer');
-            const trailerButton = document.getElementById('trailerButton');
-            const movieModal = document.getElementById('movieModal');
-            const episodesList = document.getElementById('episodesList');
-
-            if (modalTrailer) modalTrailer.src = movie.trailerUrl;
-            const watchButton = document.getElementById('watchButton');
-            if (watchButton) {
-                watchButton.href = `player.html?video=${encodeURIComponent(movie.watchUrl)}`;
-                watchButton.target = "_blank";
-            }
-            if (movieModal) {
-                movieModal.style.display = 'block';
-                document.body.style.overflow = 'hidden';
-            }
-            episodesList.style.display = 'none';
-            watchButton.style.display = 'inline-flex';
-        }
-
-        function closeModal() {
-            const movieModal = document.getElementById('movieModal');
-            const modalTrailer = document.getElementById('modalTrailer');
-            const episodesList = document.getElementById('episodesList');
-
-            if (modalTrailer) modalTrailer.src = '';
-            if (movieModal) {
-                movieModal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }
-            episodesList.style.display = 'none';
-            document.getElementById('watchButton').style.display = 'inline-flex';
-        }
-
-        window.onclick = function(event) {
-            if (event.target === document.getElementById('movieModal')) {
-                closeModal();
+        // Load video from URL parameter
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const videoUrl = urlParams.get('video');
+            if (videoUrl) {
+                video.src = decodeURIComponent(videoUrl);
             }
         };
 
-        window.addEventListener('scroll', () => {
-            const header = document.getElementById('header');
-            header.classList.toggle('scrolled', window.scrollY > 50);
-        });
-
-        function filterContent(searchTerm) {
-            if (currentContent === 'movies') {
-                const filtered = movies.filter(movie => 
-                    movie.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    movie.description.toLowerCase().includes(searchTerm.toLowerCase())
-                );
-                renderMovies(filtered);
+        // Play/Pause
+        playPauseBtn.onclick = () => {
+            if (video.paused) {
+                video.play();
+                playPauseBtn.innerHTML = '<span class="material-icons">pause</span>';
             } else {
-                const filtered = series.filter(series => 
-                    series.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    series.description.toLowerCase().includes(searchTerm.toLowerCase())
-                );
-                renderSeries(filtered);
+                video.pause();
+                playPauseBtn.innerHTML = '<span class="material-icons">play_arrow</span>';
             }
+        };
+
+        // Mute
+        muteBtn.onclick = () => {
+            video.muted = !video.muted;
+            muteBtn.innerHTML = `<span class="material-icons">${video.muted ? 'volume_off' : 'volume_up'}</span>`;
+            volumeSlider.value = video.muted ? 0 : video.volume;
+        };
+
+        // Volume
+        volumeSlider.oninput = (e) => {
+            video.volume = e.target.value;
+            video.muted = video.volume === 0;
+            muteBtn.innerHTML = `<span class="material-icons">${video.muted ? 'volume_off' : 'volume_up'}</span>`;
+        };
+
+        // Fullscreen
+        fullscreenBtn.onclick = () => {
+            if (!document.fullscreenElement) {
+                video.requestFullscreen();
+                fullscreenBtn.innerHTML = '<span class="material-icons">fullscreen_exit</span>';
+            } else {
+                document.exitFullscreen();
+                fullscreenBtn.innerHTML = '<span class="material-icons">fullscreen</span>';
+            }
+        };
+
+        // Progress bar
+        video.ontimeupdate = () => {
+            const percentage = (video.currentTime / video.duration) * 100;
+            progress.style.width = percentage + '%';
+            
+            const currentTime = formatTime(video.currentTime);
+            const duration = formatTime(video.duration);
+            timeDisplay.textContent = `${currentTime} / ${duration}`;
+        };
+
+        progressBar.onclick = (e) => {
+            const pos = (e.pageX - progressBar.offsetLeft) / progressBar.offsetWidth;
+            video.currentTime = pos * video.duration;
+        };
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            seconds = Math.floor(seconds % 60);
+            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
         }
 
-        function renderMovies(moviesToRender) {
-            const movieGrid = document.getElementById('moviesGrid');
-            movieGrid.innerHTML = '';
-            moviesToRender.forEach(movie => {
-                movieGrid.appendChild(createMovieCard(movie));
-            });
-        }
-
-        function renderSeries(seriesToRender) {
-            const seriesGrid = document.getElementById('seriesGrid');
-            seriesGrid.innerHTML = '';
-            seriesToRender.forEach(series => {
-                seriesGrid.appendChild(createSeriesCard(series));
-            });
-        }
-
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            filterContent(e.target.value);
-        });
-
-        // Initial render
-        renderMovies(movies);
+        // Update play button on video events
+        video.onplay = () => playPauseBtn.innerHTML = '<span class="material-icons">pause</span>';
+        video.onpause = () => playPauseBtn.innerHTML = '<span class="material-icons">play_arrow</span>';
     </script>
 </body>
 </html>
