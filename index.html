@@ -359,7 +359,7 @@
                 description: "Les Avengers et leurs alliés devront être prêts à tout sacrifier pour neutraliser le redoutable Thanos avant que son attaque éclair ne conduise à la destruction complète de l'univers.",
                 thumbnail: "https://fr.web.img3.acsta.net/c_310_420/pictures/18/03/16/14/42/0611719.jpg",
                 trailerUrl: "https://www.youtube.com/embed/eIWs2IUr3Vs?autoplay=1",
-                watchUrl: "https://drive.google.com/file/d/1V2hG0_cs5-bAtW-ckttR2gRthPFUAEI3/view?usp=sharing"
+                watchUrl: "https://icecube-eu-400.icedrive.io/download?p=v4pkYF22e3a1vRhSANU02A5m0YkSJTt6aP6zV9i5QxN4MBcdajSg7GvxBB6CsTErkXLwaL24OJC4HSovRIMTpM2TYcz3f6Fm63dMEuYZCk4RzKc7smZ11uoKCzxlgpS.gkoH67s8y02E_Lmbe3hrTLjyKnxWcVjwfVF8v2_4u47m9pfTzXqRRKmtc13tindin9rqzD4ucFCSshAYYpQNigjdi5FQFCqsKrm.y8f3GwLtbFSNd71OfRIVKyEz.fbKWNiMZP1uyvd427C4LLklBa8_Q.0IR6R4p5gI1e2TaqA-"
             },
             {
                 title: "Avengers: Endgame",
@@ -643,11 +643,15 @@
                 <img src="${movie.thumbnail}" alt="${movie.title}">
                 <div class="movie-info">
                     <div class="movie-title">${movie.title}</div>
-                    <a href="${movie.watchUrl}" class="watch-button" onclick="event.stopPropagation()">Watch Now</a>
+                    <button class="watch-button" onclick="event.stopPropagation(); openPlayer('${encodeURIComponent(movie.watchUrl)}')">Watch Now</button>
                 </div>
             `;
             card.onclick = () => openModal(movie);
             return card;
+        }
+
+function openPlayer(videoUrl) {
+            window.open(`player.html?video=${videoUrl}`, '_blank');
         }
 
         function createSeriesCard(series) {
