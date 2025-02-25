@@ -78,12 +78,21 @@
             border: none;
             color: white;
             cursor: pointer;
-            padding: 8px;
+            padding: 10px;
             border-radius: 50%;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .control-button:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .control-button:active {
+            transform: scale(0.95);
         }
 
         .material-icons {
@@ -92,19 +101,43 @@
 
         .progress-bar {
             flex-grow: 1;
-            height: 3px;
-            background: rgba(255, 255, 255, 0.4);
-            border-radius: 3px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
             cursor: pointer;
             position: relative;
-            margin: 0 8px;
+            margin: 0 12px;
+            transition: height 0.2s;
+        }
+
+        .progress-bar:hover {
+            height: 8px;
         }
 
         .progress {
             height: 100%;
-            background: #fff;
-            border-radius: 3px;
+            background: #ff0000;
+            border-radius: 5px;
             width: 0;
+            position: relative;
+        }
+
+        .progress::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: #ff0000;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .progress-bar:hover .progress::after {
+            opacity: 1;
         }
 
         .time-display {
@@ -305,9 +338,13 @@
         };
 
         function formatTime(seconds) {
-            const minutes = Math.floor(seconds / 60);
-            seconds = Math.floor(seconds % 60);
-            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = Math.floor(seconds % 60);
+            if (hours > 0) {
+                return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+            return `${minutes}:${secs.toString().padStart(2, '0')}`;
         }
 
         // Update play button on video events
@@ -349,6 +386,32 @@
                 speedMenu.style.display = 'none';
             };
         });
+
+        // Quality selection
+        const qualitySelect = document.querySelector('.settings-select');
+        qualitySelect.onchange = (e) => {
+            const quality = e.target.value;
+            const currentTime = video.currentTime;
+            const isPaused = video.paused;
+            
+            // Store the current video URL
+            const videoUrl = new URL(video.src);
+            
+            // Update quality parameter in URL if it exists
+            if (videoUrl.searchParams.has('quality')) {
+                videoUrl.searchParams.set('quality', quality);
+            } else {
+                videoUrl.searchParams.append('quality', quality);
+            }
+            
+            // Update video source
+            video.src = videoUrl.toString();
+            video.currentTime = currentTime;
+            
+            if (!isPaused) {
+                video.play();
+            }
+        };
     </script>
 </body>
 </html>
