@@ -225,10 +225,6 @@
     </style>
 </head>
 <body>
-    <div class="top-bar">
-        <span class="material-icons">movie</span>
-        <span class="title">Now Playing</span>
-    </div>
     <div class="video-container">
         <video id="videoPlayer">
             <source src="" type="video/mp4">
@@ -400,35 +396,25 @@
         // Quality selection
         const qualitySelect = document.querySelector('.settings-select');
         qualitySelect.onchange = (e) => {
+            e.stopPropagation();
             const quality = e.target.value;
             const currentTime = video.currentTime;
             const isPaused = video.paused;
-            const videoUrl = video.src;
+            const videoUrl = new URL(video.src);
             
             // Save current video state
             const volume = video.volume;
             const playbackRate = video.playbackRate;
             
-            // Handle Google Drive URLs
-            if (videoUrl.includes('drive.google.com')) {
-                const fileId = videoUrl.match(/\/d\/(.*?)\/|\/d\/(.*?)$/)?.[1] || videoUrl.match(/id=(.*?)(&|$)/)?.[1];
-                if (fileId) {
-                    const newUrl = `https://drive.google.com/uc?export=download&id=${fileId}&quality=${quality}`;
-                    video.src = newUrl;
-                }
-            } else {
-                // Handle direct URLs
-                const url = new URL(videoUrl);
-                url.searchParams.set('quality', quality);
-                video.src = url.toString();
-            }
+            // Update quality parameter
+            videoUrl.searchParams.set('quality', quality);
+            video.src = videoUrl.toString();
             
-            // Update video properties
+            // Restore video state
             video.currentTime = currentTime;
             video.volume = volume;
             video.playbackRate = playbackRate;
             
-            // Restore playback state
             if (!isPaused) {
                 video.play().catch(err => console.log('Playback failed:', err));
             }
