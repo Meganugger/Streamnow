@@ -409,12 +409,21 @@
             const volume = video.volume;
             const playbackRate = video.playbackRate;
             
-            // Update video source with quality parameter
-            const url = new URL(videoUrl);
-            url.searchParams.set('quality', quality);
+            // Handle Google Drive URLs
+            if (videoUrl.includes('drive.google.com')) {
+                const fileId = videoUrl.match(/\/d\/(.*?)\/|\/d\/(.*?)$/)?.[1] || videoUrl.match(/id=(.*?)(&|$)/)?.[1];
+                if (fileId) {
+                    const newUrl = `https://drive.google.com/uc?export=download&id=${fileId}&quality=${quality}`;
+                    video.src = newUrl;
+                }
+            } else {
+                // Handle direct URLs
+                const url = new URL(videoUrl);
+                url.searchParams.set('quality', quality);
+                video.src = url.toString();
+            }
             
             // Update video properties
-            video.src = url.toString();
             video.currentTime = currentTime;
             video.volume = volume;
             video.playbackRate = playbackRate;
