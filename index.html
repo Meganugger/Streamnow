@@ -825,7 +825,7 @@
                 rating: 8.4,
                 genre: "Action, Adventure, Sci-Fi",
                 streamUrl: "https://www.youtube.com/embed/eIWs2IUr3Vs",
-                watchUrl: "https://drive.google.com/file/d/1ZT15Vi1CLBD-tQRBn9fJQGeIJTOu-RIC/view?usp=sharing"
+                watchUrl: "https://drive.google.com/file/d/1V2hG0_cs5-bAtW-ckttR2gRthPFUAEI3/view?usp=sharing"
             },
             {
                 id: 3,
@@ -835,7 +835,7 @@
                 rating: 8.4,
                 genre: "Action, Adventure, Sci-Fi",
                 streamUrl: "https://www.youtube.com/embed/wV-Q0o2OQjQ",
-                watchUrl: "https://drive.google.com/file/d/1RNG1RqwHgQG6MMurrFqSOKa5esuAfWTj/view?usp=sharing"
+                watchUrl: "https://drive.google.com/file/d/1uiQWjxdxM1amkVh-AtLKeDga9i9bBrhE/view?usp=sharing"
             },
             {
                 id: 4,
@@ -1050,7 +1050,7 @@
             {
                 id: 25,
                 title: "The Amazing Spider-Man 2",
-                poster: "https://image.tmdb.org/t/p/w1280/rZ47R21ZGNTGr5ORxdMmxQWdcFn.jpg",
+                poster: "https://fr.web.img4.acsta.net/c_310_420/pictures/14/01/08/18/54/426954.jpg",
                 description: "Peter Parker va se rendre compte qu'il fait face à un conflit de bien plus grande ampleur. Être Spider-Man, quoi de plus grisant ? Peter Parker trouve son bonheur entre sa vie de héros, bondissant d'un gratte-ciel à l'autre, et les doux moments passés aux côté de Gwen.",
                 rating: 6.9,
                 genre: "Action, Adventure, Fantasy",
@@ -1415,6 +1415,9 @@
             currentMovie = movie;
             currentSeries = null;
             
+            // Make sure the watch button is visible for movies
+            document.querySelector('.modal-buttons').style.display = 'flex';
+            
             // Clear any existing episodes
             const existingEpisodes = document.querySelector('.episodes-grid');
             if (existingEpisodes) {
@@ -1434,6 +1437,9 @@
             // Store current series
             currentSeries = series;
             currentMovie = null;
+            
+            // Hide the watch button for series
+            document.querySelector('.modal-buttons').style.display = 'none';
             
             // Show episodes list if available
             if (series.episodes && series.episodes.length > 0) {
